@@ -116,5 +116,13 @@ namespace EmbeddedPython.UnitTests
             Assert.AreEqual(30, (int)results[0]);
             Assert.AreEqual(200, (int)results[1]);
         }
+
+        [TestMethod]
+        public void Dictionary_PropertyGet_ReturnsExpectedValue()
+        {
+            var results = Python.MainModule.Dictionary;
+
+            Assert.IsNotNull(results);
+        }
     }
 }

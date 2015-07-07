@@ -8,7 +8,7 @@ namespace EmbeddedPython.UnitTests
         public void Instance_NoParameters_Activates()
         {
             var p = Python;
-            p.MainModule.Dictionary.Add("global_var", 1);
+            Assert.IsNotNull(p);
         }
 
         [TestMethod]

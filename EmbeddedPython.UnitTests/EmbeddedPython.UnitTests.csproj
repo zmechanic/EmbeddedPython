@@ -68,7 +68,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Class1.rmc.cs" />
     <Compile Include="PythonModuleUnitTestsBase.cs" />
     <Compile Include="PythonUnitTestsBase.cs" />
     <Compile Include="PassThroughUnitTestsBase.cs" />
