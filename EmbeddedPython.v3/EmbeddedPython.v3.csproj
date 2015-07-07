@@ -70,6 +70,9 @@
     <Compile Include="..\EmbeddedPython.Internal\PythonDictionary.cs">
       <Link>PythonDictionary.cs</Link>
     </Compile>
+    <Compile Include="..\EmbeddedPython.Internal\PythonFactory.cs">
+      <Link>PythonFactory.cs</Link>
+    </Compile>
     <Compile Include="..\EmbeddedPython.Internal\PythonFunction.cs">
       <Link>PythonFunction.cs</Link>
     </Compile>

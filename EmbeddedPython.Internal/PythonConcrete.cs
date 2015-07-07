@@ -8,6 +8,7 @@ namespace EmbeddedPython.Internal
         private static readonly Dictionary<string, PythonModule> Modules = new Dictionary<string, PythonModule>();
 
         private static PythonModule _mainModule;
+        private static readonly PythonFactory _factory = new PythonFactory();
 
         internal static void Initialize()
         {
@@ -164,6 +165,11 @@ namespace EmbeddedPython.Internal
         internal static IPythonModule MainModule
         {
             get { return _mainModule; }
+        }
+
+        internal static IPythonTypeFactory Factory
+        {
+            get { return _factory; }
         }
 
         internal static IPythonModule ImportModule(string modulePath, string moduleName)

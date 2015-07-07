@@ -1428,6 +1428,11 @@ namespace EmbeddedPython.Internal
                 }
             }
 
+            if (t == typeof(object))
+            {
+                return ConvertToClrType(value, GetClrType(value));
+            }
+
             throw new PythonException(string.Format("Unsupported Python to CLR conversion for target type {0}.", t));
         }
 
@@ -1476,22 +1481,22 @@ namespace EmbeddedPython.Internal
                 {
                     return typeof(int);
                 }
-                else if (pyType == PyType_UnsignedLongLong)
-                {
-                    return typeof(ulong);
-                }
                 else if (pyType == PyType_LongLong)
                 {
                     return typeof(long);
                 }
-#endif
-                else if (pyType == PyType_UnsignedLong)
+                else if (pyType == PyType_UnsignedLongLong)
                 {
-                    return typeof(uint);
+                    return typeof(ulong);
                 }
+#endif
                 else if (pyType == PyType_Long)
                 {
                     return typeof(int);
+                }
+                else if (pyType == PyType_UnsignedLong)
+                {
+                    return typeof(uint);
                 }
                 else if (pyType == PyType_Float)
                 {

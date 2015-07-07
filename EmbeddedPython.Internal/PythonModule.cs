@@ -234,7 +234,7 @@ namespace EmbeddedPython.Internal
                         {
                             foreach (var variable in variables)
                             {
-                                userDictionary.Add(variable.Key, variable.Value);
+                                userDictionary.Set(variable.Key, variable.Value);
                             }
                         }
 
@@ -281,7 +281,7 @@ namespace EmbeddedPython.Internal
                         {
                             foreach (var variable in variables)
                             {
-                                userDictionary.Add(variable.Key, variable.Value);
+                                userDictionary.Set(variable.Key, variable.Value);
                             }
                         }
 

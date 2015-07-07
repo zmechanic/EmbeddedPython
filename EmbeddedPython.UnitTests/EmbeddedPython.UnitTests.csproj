@@ -68,6 +68,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="PythonDictionaryUnitTestsBase.cs" />
+    <Compile Include="V2PythonDictionaryUnitTests.cs" />
+    <Compile Include="V3PythonDictionaryUnitTests.cs" />
     <Compile Include="PythonModuleUnitTestsBase.cs" />
     <Compile Include="PythonUnitTestsBase.cs" />
     <Compile Include="PassThroughUnitTestsBase.cs" />

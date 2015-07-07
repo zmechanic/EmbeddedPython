@@ -49,6 +49,7 @@
     <Compile Include="IPythonFunction.cs" />
     <Compile Include="IPythonModule.cs" />
     <Compile Include="IPythonDictionary.cs" />
+    <Compile Include="IPythonTypeFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PythonException.cs" />
     <Compile Include="PythonAsciiString.cs" />

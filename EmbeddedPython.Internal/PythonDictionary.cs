@@ -2,7 +2,7 @@
 
 namespace EmbeddedPython.Internal
 {
-    public class PythonDictionary : IPythonDictionary
+    internal class PythonDictionary : IPythonDictionary
     {
         private readonly IntPtr _dictionary;
 
@@ -61,32 +61,44 @@ namespace EmbeddedPython.Internal
             get { return _dictionary; }
         }
 
-        public void Add<T>(string name, T value)
+        public object this[string key]
         {
-            var pyVar = PythonInterop.ConvertToPythonType(value);
-            if (PythonInterop.PyDict_SetItemString(_dictionary, name, pyVar) != 0)
+            get
             {
-                throw new PythonException(string.Format("Cannot set dictionary item {0}. Encountered Python error \"{1}\".", name, PythonInterop.PyErr_Fetch()));
+                return Get<object>(key);
+            }
+            set
+            {
+                this.Set(key, value);
             }
         }
 
-        public T Get<T>(string name)
+        public void Set<T>(string key, T value)
         {
-            var pyVar = PythonInterop.PyDict_GetItemString(_dictionary, name);
+            var pyVar = PythonInterop.ConvertToPythonType(value);
+            if (PythonInterop.PyDict_SetItemString(_dictionary, key, pyVar) != 0)
+            {
+                throw new PythonException(string.Format("Cannot set dictionary item {0}. Encountered Python error \"{1}\".", key, PythonInterop.PyErr_Fetch()));
+            }
+        }
+
+        public T Get<T>(string key)
+        {
+            var pyVar = PythonInterop.PyDict_GetItemString(_dictionary, key);
             if (pyVar == IntPtr.Zero)
             {
-                throw new PythonException(string.Format("Cannot get dictionary item {0}. Encountered Python error \"{1}\".", name, PythonInterop.PyErr_Fetch()));
+                throw new PythonException(string.Format("Cannot get dictionary item {0}. Encountered Python error \"{1}\".", key, PythonInterop.PyErr_Fetch()));
             }
 
             return PythonInterop.ConvertToClrType<T>(pyVar);
         }
 
-        public object Get(string name, Type t)
+        public object Get(string key, Type t)
         {
-            var pyVar = PythonInterop.PyDict_GetItemString(_dictionary, name);
+            var pyVar = PythonInterop.PyDict_GetItemString(_dictionary, key);
             if (pyVar == IntPtr.Zero)
             {
-                throw new PythonException(string.Format("Cannot get dictionary item {0}. Encountered Python error \"{1}\".", name, PythonInterop.PyErr_Fetch()));
+                throw new PythonException(string.Format("Cannot get dictionary item {0}. Encountered Python error \"{1}\".", key, PythonInterop.PyErr_Fetch()));
             }
 
             return PythonInterop.ConvertToClrType(pyVar, t);

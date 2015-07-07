@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace EmbeddedPython.Internal
 {
@@ -18,6 +17,11 @@ namespace EmbeddedPython.Internal
         public IPythonModule ImportModule(string modulePath, string moduleName)
         {
             return PythonConcrete.ImportModule(modulePath, moduleName);
+        }
+
+        public IPythonTypeFactory Factory
+        {
+            get { return PythonConcrete.Factory; }
         }
 
         public abstract void Dispose();
