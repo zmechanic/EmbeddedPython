@@ -49,6 +49,7 @@
     <Compile Include="PythonModule.cs" />
     <Compile Include="PythonBase.cs" />
     <Compile Include="PythonDictionary.cs" />
+    <Compile Include="PythonTypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EmbeddedPython\EmbeddedPython.csproj">

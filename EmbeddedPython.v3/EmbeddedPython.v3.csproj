@@ -82,6 +82,9 @@
     <Compile Include="..\EmbeddedPython.Internal\PythonModule.cs">
       <Link>PythonModule.cs</Link>
     </Compile>
+    <Compile Include="..\EmbeddedPython.Internal\PythonTypeConverter.cs">
+      <Link>PythonTypeConverter.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Python.cs" />
   </ItemGroup>

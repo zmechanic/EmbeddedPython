@@ -6,7 +6,7 @@ namespace EmbeddedPython.Internal
     {
         public Type GetClrType(IntPtr value)
         {
-            return PythonInterop.GetClrType(value);
+            return PythonTypeConverter.GetClrType(value);
         }
 
         public IPythonModule MainModule

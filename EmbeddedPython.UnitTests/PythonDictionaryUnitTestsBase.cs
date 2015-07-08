@@ -12,7 +12,7 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
-        public void Indexer_Get_Succeeds()
+        public void Indexer_Get_ReturnsCorrectValue()
         {
             const int value = 1;
 

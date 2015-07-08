@@ -15,7 +15,6 @@ namespace EmbeddedPython.Internal
                 PythonInterop.PyGILState_Invoke(() =>
                 {
                     dictionary = PythonInterop.PyDict_New();
-
                     if (dictionary == IntPtr.Zero)
                     {
                         throw new PythonException(PythonInterop.PyErr_Fetch());
@@ -39,7 +38,6 @@ namespace EmbeddedPython.Internal
                 PythonInterop.PyGILState_Invoke(() =>
                 {
                     dictionary = PythonInterop.PyModule_GetDict(module.NativePythonModule);
-
                     if (dictionary == IntPtr.Zero)
                     {
                         throw new PythonException(PythonInterop.PyErr_Fetch());
@@ -75,7 +73,7 @@ namespace EmbeddedPython.Internal
 
         public void Set<T>(string key, T value)
         {
-            var pyVar = PythonInterop.ConvertToPythonType(value);
+            var pyVar = PythonTypeConverter.ConvertToPythonType(value);
             if (PythonInterop.PyDict_SetItemString(_dictionary, key, pyVar) != 0)
             {
                 throw new PythonException(string.Format("Cannot set dictionary item {0}. Encountered Python error \"{1}\".", key, PythonInterop.PyErr_Fetch()));
@@ -90,7 +88,7 @@ namespace EmbeddedPython.Internal
                 throw new PythonException(string.Format("Cannot get dictionary item {0}. Encountered Python error \"{1}\".", key, PythonInterop.PyErr_Fetch()));
             }
 
-            return PythonInterop.ConvertToClrType<T>(pyVar);
+            return PythonTypeConverter.ConvertToClrType<T>(pyVar);
         }
 
         public object Get(string key, Type t)
@@ -101,7 +99,7 @@ namespace EmbeddedPython.Internal
                 throw new PythonException(string.Format("Cannot get dictionary item {0}. Encountered Python error \"{1}\".", key, PythonInterop.PyErr_Fetch()));
             }
 
-            return PythonInterop.ConvertToClrType(pyVar, t);
+            return PythonTypeConverter.ConvertToClrType(pyVar, t);
         }
 
         public void Dispose()
