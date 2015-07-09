@@ -232,9 +232,9 @@ namespace EmbeddedPython.Internal
             if (t == typeof(int))
             {
 #if PY_MAJOR_VERSION_2
-                return (int)PythonInterop.PyInt_AsLong(value);
+                return PythonInterop.PyInt_AsLong(value);
 #elif PY_MAJOR_VERSION_3
-                return (int)PythonInterop.PyLong_AsLong(value);
+                return PythonInterop.PyLong_AsLong(value);
 #endif
             }
 
@@ -276,6 +276,11 @@ namespace EmbeddedPython.Internal
             if (t == typeof(PythonUnicodeString))
             {
                 return PythonUnicodeString.FromString(PythonInterop.PyUnicode_ToString(value));
+            }
+
+            if (t == typeof(IPythonDictionary))
+            {
+                return new PythonDictionary(value);
             }
 
             if (t.IsGenericType)
@@ -322,6 +327,13 @@ namespace EmbeddedPython.Internal
         public static T ConvertToClrType<T>(IntPtr value)
         {
             var t = typeof(T);
+
+            var obj = ConvertToClrType(value, t);
+            if (obj is T)
+            {
+                return (T)obj;
+            }
+
             return (T)Convert.ChangeType(ConvertToClrType(value, t), t);
         }
 
@@ -388,6 +400,10 @@ namespace EmbeddedPython.Internal
                 else if (pyType == PythonInterop.PyType_Tuple)
                 {
                     return typeof(Tuple);
+                }
+                else if (pyType == PythonInterop.PyType_Dict)
+                {
+                    return typeof(IPythonDictionary);
                 }
 
                 throw new PythonException("Unsupported Python type.");

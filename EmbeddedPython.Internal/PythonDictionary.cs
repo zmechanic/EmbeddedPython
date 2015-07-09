@@ -54,6 +54,11 @@ namespace EmbeddedPython.Internal
             _dictionary = dictionary;
         }
 
+        internal PythonDictionary(IntPtr nativePythonDictionary)
+        {
+            _dictionary = nativePythonDictionary;
+        }
+
         public IntPtr NativePythonDictionary
         {
             get { return _dictionary; }

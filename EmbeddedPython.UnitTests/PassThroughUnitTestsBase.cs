@@ -9,50 +9,50 @@ namespace EmbeddedPython.UnitTests
     public abstract class PassThroughUnitTestsBase : PythonVersionSpecificUnitTestBase
     {
         [TestMethod]
-        public void FunctionInvoke_NullString_ReturnsSameValue()
+        public void PassThrough_NullString_ReturnsSameValue()
         {
             TestPassThrough<string>(null);
         }
 
         [TestMethod]
-        public void FunctionInvoke_EmptyString_ReturnsSameValue()
+        public void PassThrough_EmptyString_ReturnsSameValue()
         {
             TestPassThrough(string.Empty);
         }
 
         [TestMethod]
-        public void FunctionInvoke_TestString_ReturnsSameValue()
+        public void PassThrough_TestString_ReturnsSameValue()
         {
             TestPassThrough("Test String");
         }
 
         [TestMethod]
-        public void FunctionInvoke_TestUnicodeNullString_ReturnsSameValue()
+        public void PassThrough_TestUnicodeNullString_ReturnsSameValue()
         {
             TestPassThrough<PythonUnicodeString>(null);
         }
 
         [TestMethod]
-        public void FunctionInvoke_TestUnicodeEmptyString_ReturnsSameValue()
+        public void PassThrough_TestUnicodeEmptyString_ReturnsSameValue()
         {
             TestPassThrough(PythonUnicodeString.Empty);
         }
 
         [TestMethod]
-        public void FunctionInvoke_TestUnicodeString_ReturnsSameValue()
+        public void PassThrough_TestUnicodeString_ReturnsSameValue()
         {
             TestPassThrough(PythonUnicodeString.FromString("«κόσμε»"));
         }
 
         [TestMethod]
-        public void FunctionInvoke_Boolean_ReturnsSameValue()
+        public void PassThrough_Boolean_ReturnsSameValue()
         {
             TestPassThrough(true);
             TestPassThrough(false);
         }
 
         [TestMethod]
-        public void FunctionInvoke_Byte_ReturnsSameValue()
+        public void PassThrough_Byte_ReturnsSameValue()
         {
             TestPassThrough((byte)0);
             TestPassThrough(byte.MinValue);
@@ -60,7 +60,7 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
-        public void FunctionInvoke_Short_ReturnsSameValue()
+        public void PassThrough_Short_ReturnsSameValue()
         {
             TestPassThrough((short)0);
             TestPassThrough(short.MinValue);
@@ -68,7 +68,7 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
-        public void FunctionInvoke_UnsignedShort_ReturnsSameValue()
+        public void PassThrough_UnsignedShort_ReturnsSameValue()
         {
             TestPassThrough((ushort)0);
             TestPassThrough(ushort.MinValue);
@@ -76,7 +76,7 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
-        public void FunctionInvoke_Int_ReturnsSameValue()
+        public void PassThrough_Int_ReturnsSameValue()
         {
             TestPassThrough((int)0);
             TestPassThrough(int.MinValue);
@@ -84,7 +84,7 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
-        public void FunctionInvoke_UnsignedInt_ReturnsSameValue()
+        public void PassThrough_UnsignedInt_ReturnsSameValue()
         {
             TestPassThrough((uint)0);
             TestPassThrough(uint.MinValue);
@@ -92,7 +92,7 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
-        public void FunctionInvoke_Long_ReturnsSameValue()
+        public void PassThrough_Long_ReturnsSameValue()
         {
             TestPassThrough((long)0);
             TestPassThrough(long.MinValue);
@@ -100,7 +100,7 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
-        public void FunctionInvoke_UnsignedLong_ReturnsSameValue()
+        public void PassThrough_UnsignedLong_ReturnsSameValue()
         {
             TestPassThrough((ulong)0);
             TestPassThrough(ulong.MinValue);
@@ -108,7 +108,7 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
-        public void FunctionInvoke_Tuple_ReturnsSameValue()
+        public void PassThrough_Tuple_ReturnsSameValue()
         {
             TestPassThrough(new Tuple<int>(1));
             TestPassThrough(new Tuple<int, int>(1, 2));
@@ -121,7 +121,7 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
-        public void FunctionInvoke_Bytes_ReturnsSameValue()
+        public void PassThrough_Bytes_ReturnsSameValue()
         {
             var bytes = new byte[65535];
 
@@ -131,6 +131,19 @@ namespace EmbeddedPython.UnitTests
             }
 
             TestPassThrough(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+        }
+
+        [TestMethod]
+        public void PassThrough_Dictionary_ReturnsSameValue()
+        {
+            var testTarget = Python.Factory.CreateDictionary();
+            testTarget["testKey"] = "Test Value";
+
+            var result = Python.MainModule.Execute<IPythonDictionary>("result = v", new Dictionary<string, object> { { "v", testTarget } }, "result");
+
+            Assert.AreEqual("Test Value", result.Get<string>("testKey"));
+
+            result.Dispose();
         }
 
         private void TestPassThrough<T>(T value)
