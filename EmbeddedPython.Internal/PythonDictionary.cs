@@ -57,6 +57,7 @@ namespace EmbeddedPython.Internal
         internal PythonDictionary(IntPtr nativePythonDictionary)
         {
             _dictionary = nativePythonDictionary;
+            PythonInterop.PyGILState_Invoke(() =>PythonInterop.Py_IncRef(_dictionary));
         }
 
         public IntPtr NativePythonDictionary
@@ -78,33 +79,71 @@ namespace EmbeddedPython.Internal
 
         public void Set<T>(string key, T value)
         {
-            var pyVar = PythonTypeConverter.ConvertToPythonType(value);
-            if (PythonInterop.PyDict_SetItemString(_dictionary, key, pyVar) != 0)
+            try
             {
-                throw new PythonException(string.Format("Cannot set dictionary item {0}. Encountered Python error \"{1}\".", key, PythonInterop.PyErr_Fetch()));
+                PythonInterop.PyGILState_Invoke(() =>
+                {
+                    var pyVar = PythonTypeConverter.ConvertToPythonType(value);
+                    if (PythonInterop.PyDict_SetItemString(_dictionary, key, pyVar) != 0)
+                    {
+                        throw new PythonException(PythonInterop.PyErr_Fetch());
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new PythonException(string.Format("Cannot set dictionary item {0}. Encountered Python error \"{1}\".", key, ex.Message), ex);
             }
         }
 
         public T Get<T>(string key)
         {
-            var pyVar = PythonInterop.PyDict_GetItemString(_dictionary, key);
-            if (pyVar == IntPtr.Zero)
+            T netVar = default(T);
+
+            try
             {
-                throw new PythonException(string.Format("Cannot get dictionary item {0}. Encountered Python error \"{1}\".", key, PythonInterop.PyErr_Fetch()));
+                PythonInterop.PyGILState_Invoke(() =>
+                {
+                    var pyVar = PythonInterop.PyDict_GetItemString(_dictionary, key);
+                    if (pyVar == IntPtr.Zero)
+                    {
+                        throw new PythonException(PythonInterop.PyErr_Fetch());
+                    }
+
+                    netVar = PythonTypeConverter.ConvertToClrType<T>(pyVar);
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new PythonException(string.Format("Cannot get dictionary item {0}. Encountered Python error \"{1}\".", key, ex.Message), ex);
             }
 
-            return PythonTypeConverter.ConvertToClrType<T>(pyVar);
+            return netVar;
         }
 
         public object Get(string key, Type t)
         {
-            var pyVar = PythonInterop.PyDict_GetItemString(_dictionary, key);
-            if (pyVar == IntPtr.Zero)
+            object netVar = null;
+
+            try
             {
-                throw new PythonException(string.Format("Cannot get dictionary item {0}. Encountered Python error \"{1}\".", key, PythonInterop.PyErr_Fetch()));
+                PythonInterop.PyGILState_Invoke(() =>
+                {
+                    var pyVar = PythonInterop.PyDict_GetItemString(_dictionary, key);
+                    if (pyVar == IntPtr.Zero)
+                    {
+                        throw new PythonException(PythonInterop.PyErr_Fetch());
+                    }
+
+                    netVar = PythonTypeConverter.ConvertToClrType(pyVar, t);
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new PythonException(string.Format("Cannot get dictionary item {0}. Encountered Python error \"{1}\".", key, ex.Message), ex);
             }
 
-            return PythonTypeConverter.ConvertToClrType(pyVar, t);
+            return netVar;
         }
 
         public void Dispose()
@@ -117,7 +156,7 @@ namespace EmbeddedPython.Internal
         {
             if (disposing)
             {
-                PythonInterop.Py_DecRef(_dictionary);
+                PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_DecRef(this._dictionary));
             }
         }
     }

@@ -122,7 +122,7 @@ namespace EmbeddedPython.Internal
         {
             if (disposing)
             {
-                PythonInterop.Py_DecRef(_function);
+                PythonInterop.PyGILState_Invoke(() =>PythonInterop.Py_DecRef(_function));
             }
         }
 

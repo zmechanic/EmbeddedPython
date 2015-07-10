@@ -340,7 +340,7 @@ namespace EmbeddedPython.Internal
                 }
 
                 _dictionary.Dispose();
-                PythonInterop.Py_DecRef(_module);
+                PythonInterop.PyGILState_Invoke(() =>PythonInterop.Py_DecRef(_module));
             }
         }
 
