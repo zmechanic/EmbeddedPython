@@ -25,16 +25,12 @@ namespace EmbeddedPython.Internal
 
             var pyBuiltIn = PythonInterop.PyDict_GetItemString(((PythonDictionary)_mainModule.Dictionary).NativePythonDictionary, "__builtins__");
 
-            PythonInterop.Py_IncRef(pyBuiltIn);
-
             PythonInterop.Py_None = PythonInterop.PyObject_GetAttrString(pyBuiltIn, "None");
             PythonInterop.Py_True = PythonInterop.PyObject_GetAttrString(pyBuiltIn, "True");
             PythonInterop.Py_False = PythonInterop.PyObject_GetAttrString(pyBuiltIn, "False");
 
             PythonInterop.PyType_Module = PythonInterop.PyObject_Type(pyBuiltIn);
             PythonInterop.PyType_BaseObject = PythonInterop.PyObject_GetAttrString(pyBuiltIn, "object");
-
-            PythonInterop.Py_DecRef(pyBuiltIn);
 
             PythonInterop.PyType_Bool = PythonInterop.PyObject_Type(PythonInterop.Py_True);
             PythonInterop.PyType_None = PythonInterop.PyObject_Type(PythonInterop.Py_None);

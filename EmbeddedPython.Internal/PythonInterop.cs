@@ -911,7 +911,7 @@ namespace EmbeddedPython.Internal
         PyErr_NormalizeException(IntPtr ob, IntPtr val, IntPtr tb);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
-        internal static unsafe extern int
+        internal static unsafe extern IntPtr
         PyErr_Occurred();
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]

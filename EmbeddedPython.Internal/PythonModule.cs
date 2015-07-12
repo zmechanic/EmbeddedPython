@@ -187,7 +187,7 @@ namespace EmbeddedPython.Internal
 
                         var pyResult = PythonInterop.PyRun_String(code, PythonInterop.Py_file_input, _dictionary.NativePythonDictionary, userDictionary.NativePythonDictionary);
                         //var pyValue = PythonInterop.PyEval_EvalCode(cc, _mainModuleDictionary, userDictionary);
-                        if (pyResult == IntPtr.Zero || PythonInterop.PyErr_Occurred() != 0)
+                        if (pyResult == IntPtr.Zero || PythonInterop.PyErr_Occurred() != IntPtr.Zero)
                         {
                             throw new PythonException(PythonInterop.PyErr_Fetch());
                         }
@@ -239,7 +239,7 @@ namespace EmbeddedPython.Internal
                         }
 
                         var pyResult = PythonInterop.PyRun_String(code, PythonInterop.Py_file_input, _dictionary.NativePythonDictionary, userDictionary.NativePythonDictionary);
-                        if (pyResult == IntPtr.Zero || PythonInterop.PyErr_Occurred() != 0)
+                        if (pyResult == IntPtr.Zero || PythonInterop.PyErr_Occurred() != IntPtr.Zero)
                         {
                             throw new PythonException(PythonInterop.PyErr_Fetch());
                         }
@@ -286,7 +286,7 @@ namespace EmbeddedPython.Internal
                         }
 
                         var pyResult = PythonInterop.PyRun_String(code, PythonInterop.Py_file_input, _dictionary.NativePythonDictionary, userDictionary.NativePythonDictionary);
-                        if (pyResult == IntPtr.Zero || PythonInterop.PyErr_Occurred() != 0)
+                        if (pyResult == IntPtr.Zero || PythonInterop.PyErr_Occurred() != IntPtr.Zero)
                         {
                             throw new PythonException(PythonInterop.PyErr_Fetch());
                         }

@@ -15,7 +15,7 @@ namespace EmbeddedPython.Internal
                 PythonInterop.PyGILState_Invoke(() =>
                 {
                     function = PythonInterop.PyObject_GetAttrString(module.NativePythonModule, functionName);
-                    if (function == IntPtr.Zero || PythonInterop.PyErr_Occurred() != 0)
+                    if (function == IntPtr.Zero || PythonInterop.PyErr_Occurred() != IntPtr.Zero)
                     {
                         throw new PythonException(PythonInterop.PyErr_Fetch());
                     }
