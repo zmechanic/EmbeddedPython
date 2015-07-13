@@ -17,7 +17,7 @@ namespace EmbeddedPython.Internal
                     function = PythonInterop.PyObject_GetAttrString(module.NativePythonModule, functionName);
                     if (function == IntPtr.Zero || PythonInterop.PyErr_Occurred() != IntPtr.Zero)
                     {
-                        throw new PythonException(PythonInterop.PyErr_Fetch());
+                        throw PythonInterop.PyErr_Fetch();
                     }
 
                     if (PythonInterop.PyCallable_Check(function) == 0)
@@ -151,7 +151,7 @@ namespace EmbeddedPython.Internal
 
                 if (result == IntPtr.Zero)
                 {
-                    throw new PythonException(PythonInterop.PyErr_Fetch());
+                    throw PythonInterop.PyErr_Fetch();
                 }
             });
 

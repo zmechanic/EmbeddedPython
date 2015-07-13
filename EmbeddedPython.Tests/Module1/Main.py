@@ -15,5 +15,5 @@ class MyClass:
     def __init__(self):
         self._x = 12
 
-	def doSomething(self):
-		self._x++
+    def doSomething(self):
+        self._x++

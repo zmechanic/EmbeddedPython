@@ -5,8 +5,6 @@ namespace EmbeddedPython.Internal
 {
     internal static class PythonInterop
     {
-        internal static IPythonFunction tb_format_exception;
-
         internal static IntPtr Py_None;
         internal static IntPtr Py_True;
         internal static IntPtr Py_False;
@@ -964,7 +962,7 @@ namespace EmbeddedPython.Internal
             var pythonBytes = PyBytes_FromByteArray(System.Text.Encoding.ASCII.GetBytes(value), value.Length);
             if (pythonBytes == IntPtr.Zero)
             {
-                throw new PythonException(PyErr_Fetch());
+                throw PyErr_Fetch();
             }
 
             return pythonBytes;
@@ -976,7 +974,7 @@ namespace EmbeddedPython.Internal
 
             if (pythonBytes == IntPtr.Zero)
             {
-                throw new PythonException(PyErr_Fetch());
+                throw PyErr_Fetch();
             }
 
             return pythonBytes;
@@ -996,7 +994,7 @@ namespace EmbeddedPython.Internal
 
             if (pythonBytes == IntPtr.Zero)
             {
-                throw new PythonException(PyErr_Fetch());
+                throw PyErr_Fetch();
             }
 
             return pythonBytes;
@@ -1008,7 +1006,7 @@ namespace EmbeddedPython.Internal
             var pythonString = PyString_FromStringAndSize(value, value.Length);
             if (pythonString == IntPtr.Zero)
             {
-                throw new PythonException(PyErr_Fetch());
+                throw PyErr_Fetch();
             }
 
             return pythonString;
@@ -1036,7 +1034,7 @@ namespace EmbeddedPython.Internal
 #endif
             if (pythonString == IntPtr.Zero)
             {
-                throw new PythonException(PyErr_Fetch());
+                throw PyErr_Fetch();
             }
 
             return pythonString;
@@ -1052,7 +1050,7 @@ namespace EmbeddedPython.Internal
                 var pyPointer = PyUnicode_AsByteArray(value);
                 if (pyPointer == null)
                 {
-                    throw new PythonException(PyErr_Fetch());
+                    throw PyErr_Fetch();
                 }
 
 #if PY_UCS2
@@ -1099,30 +1097,34 @@ namespace EmbeddedPython.Internal
 #endif
         }
 
-        public static string PyErr_Fetch()
+        public static PythonException PyErr_Fetch()
         {
             var type = IntPtr.Zero;
             var value = IntPtr.Zero;
             var traceback = IntPtr.Zero;
 
             PyErr_Fetch(ref type, ref value, ref traceback);
-            var k = PythonTypeConverter.GetClrType(value);
-            //PyErr_NormalizeException(ref type, ref value, ref traceback);
 
             if (type != IntPtr.Zero)
             {
-                if (tb_format_exception != null)
+                var exceptionTuples = PythonTypeConverter.ConvertToClrType<Tuple<string, Tuple<string, int, int, string>>>(value);
+                if (exceptionTuples != null)
                 {
-                    tb_format_exception.Invoke<IntPtr, IntPtr, IntPtr>(type, value);
+                    return new PythonException(
+                        exceptionTuples.Item1,
+                        exceptionTuples.Item2.Item1,
+                        exceptionTuples.Item2.Item2,
+                        exceptionTuples.Item2.Item3,
+                        exceptionTuples.Item2.Item4);
                 }
 
-                var s = PyString_ToString(value);
-                if (s == null)
-                {
-                    return PyErr_Fetch();
-                }
+                //var s = PyString_ToString(value);
+                //if (s == null)
+                //{
+                //    return PyErr_Fetch();
+                //}
 
-                return s;
+                //return s;
             }
 
             return null;

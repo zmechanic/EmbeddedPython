@@ -17,7 +17,7 @@ namespace EmbeddedPython.Internal
                     dictionary = PythonInterop.PyDict_New();
                     if (dictionary == IntPtr.Zero)
                     {
-                        throw new PythonException(PythonInterop.PyErr_Fetch());
+                        throw PythonInterop.PyErr_Fetch();
                     }
                 });
             }
@@ -40,7 +40,7 @@ namespace EmbeddedPython.Internal
                     dictionary = PythonInterop.PyModule_GetDict(module.NativePythonModule);
                     if (dictionary == IntPtr.Zero)
                     {
-                        throw new PythonException(PythonInterop.PyErr_Fetch());
+                        throw PythonInterop.PyErr_Fetch();
                     }
 
                     PythonInterop.Py_IncRef(dictionary);
@@ -86,7 +86,7 @@ namespace EmbeddedPython.Internal
                     var pyVar = PythonTypeConverter.ConvertToPythonType(value);
                     if (PythonInterop.PyDict_SetItemString(_dictionary, key, pyVar) != 0)
                     {
-                        throw new PythonException(PythonInterop.PyErr_Fetch());
+                        throw PythonInterop.PyErr_Fetch();
                     }
                 });
             }
@@ -107,7 +107,7 @@ namespace EmbeddedPython.Internal
                     var pyVar = PythonInterop.PyDict_GetItemString(_dictionary, key);
                     if (pyVar == IntPtr.Zero)
                     {
-                        throw new PythonException(PythonInterop.PyErr_Fetch());
+                        throw PythonInterop.PyErr_Fetch();
                     }
 
                     netVar = PythonTypeConverter.ConvertToClrType<T>(pyVar);
@@ -132,7 +132,7 @@ namespace EmbeddedPython.Internal
                     var pyVar = PythonInterop.PyDict_GetItemString(_dictionary, key);
                     if (pyVar == IntPtr.Zero)
                     {
-                        throw new PythonException(PythonInterop.PyErr_Fetch());
+                        throw PythonInterop.PyErr_Fetch();
                     }
 
                     netVar = PythonTypeConverter.ConvertToClrType(pyVar, t);

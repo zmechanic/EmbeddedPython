@@ -288,6 +288,51 @@ namespace EmbeddedPython.Internal
                 return new PythonDictionary(value);
             }
 
+            if (t == typeof(Tuple))
+            {
+                var pyTupleSize = PythonInterop.PyTuple_Size(value);
+                if (pyTupleSize < 0)
+                {
+                    throw new PythonException(string.Format("Failed to obtain Python tuple size with error \"{0}\".", PythonInterop.PyErr_Fetch()));
+                }
+
+                var values = new object[pyTupleSize];
+                for (var i = 0; i < pyTupleSize; i++)
+                {
+                    values[i] = ConvertToClrType(PythonInterop.PyTuple_GetItem(value, i), typeof(object));
+                }
+
+                switch (pyTupleSize)
+                {
+                    case 1:
+                        t = typeof(Tuple<object>);
+                        break;
+                    case 2:
+                        t = typeof(Tuple<object, object>);
+                        break;
+                    case 3:
+                        t = typeof(Tuple<object, object, object>);
+                        break;
+                    case 4:
+                        t = typeof(Tuple<object, object, object, object>);
+                        break;
+                    case 5:
+                        t = typeof(Tuple<object, object, object, object, object>);
+                        break;
+                    case 6:
+                        t = typeof(Tuple<object, object, object, object, object, object>);
+                        break;
+                    case 7:
+                        t = typeof(Tuple<object, object, object, object, object, object, object>);
+                        break;
+                    case 8:
+                        t = typeof(Tuple<object, object, object, object, object, object, object, object>);
+                        break;
+                }
+
+                return Activator.CreateInstance(t, values);
+            }
+
             if (t.IsGenericType)
             {
                 var genericType = t.GetGenericTypeDefinition();
@@ -309,10 +354,10 @@ namespace EmbeddedPython.Internal
                         throw new PythonException(string.Format("Failed to obtain Python tuple size with error \"{0}\".", PythonInterop.PyErr_Fetch()));
                     }
 
-                    if (PythonInterop.PyTuple_Size(value) != numberOfArgTypes) throw new PythonException(string.Format("Expected tuple of size {0} got size {1}.", numberOfArgTypes, PythonInterop.PyTuple_Size(value)));
+                    if (pyTupleSize != numberOfArgTypes) throw new PythonException(string.Format("Expected tuple of size {0} got size {1}.", numberOfArgTypes, pyTupleSize));
 
-                    var values = new object[genericArgTypes.Length];
-                    for (var i = 0; i < numberOfArgTypes; i++)
+                    var values = new object[pyTupleSize];
+                    for (var i = 0; i < pyTupleSize; i++)
                     {
                         values[i] = ConvertToClrType(PythonInterop.PyTuple_GetItem(value, i), genericArgTypes[i]);
                     }

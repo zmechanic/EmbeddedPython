@@ -26,7 +26,7 @@ namespace EmbeddedPython.Internal
 
                     if (module == IntPtr.Zero)
                     {
-                        throw new PythonException(PythonInterop.PyErr_Fetch());
+                        throw PythonInterop.PyErr_Fetch();
                     }
 
                     PythonInterop.Py_IncRef(module);
@@ -74,7 +74,7 @@ namespace EmbeddedPython.Internal
 
                     if (module == IntPtr.Zero)
                     {
-                        throw new PythonException(PythonInterop.PyErr_Fetch());
+                        throw PythonInterop.PyErr_Fetch();
                     }
 
                     PythonInterop.Py_IncRef(module);
@@ -196,14 +196,14 @@ namespace EmbeddedPython.Internal
                         //var cc = PythonInterop.Py_CompileString(expression, "asdf", PythonInterop.Py_file_input);
                         //if (cc == IntPtr.Zero || PythonInterop.PyErr_Occurred() != 0)
                         //{
-                        //    throw new PythonException(PythonInterop.PyErr_Fetch());
+                        //    throw PythonInterop.PyErr_Fetch();
                         //}
 
                         var pyResult = PythonInterop.PyRun_String(code, PythonInterop.Py_file_input, _dictionary.NativePythonDictionary, userDictionary.NativePythonDictionary);
                         //var pyValue = PythonInterop.PyEval_EvalCode(cc, _mainModuleDictionary, userDictionary);
                         if (pyResult == IntPtr.Zero || PythonInterop.PyErr_Occurred() != IntPtr.Zero)
                         {
-                            throw new PythonException(PythonInterop.PyErr_Fetch());
+                            throw PythonInterop.PyErr_Fetch();
                         }
 
                         PythonInterop.Py_DecRef(pyResult);
@@ -255,7 +255,7 @@ namespace EmbeddedPython.Internal
                         var pyResult = PythonInterop.PyRun_String(code, PythonInterop.Py_file_input, _dictionary.NativePythonDictionary, userDictionary.NativePythonDictionary);
                         if (pyResult == IntPtr.Zero || PythonInterop.PyErr_Occurred() != IntPtr.Zero)
                         {
-                            throw new PythonException(PythonInterop.PyErr_Fetch());
+                            throw PythonInterop.PyErr_Fetch();
                         }
 
                         PythonInterop.Py_DecRef(pyResult);
@@ -302,7 +302,7 @@ namespace EmbeddedPython.Internal
                         var pyResult = PythonInterop.PyRun_String(code, PythonInterop.Py_file_input, _dictionary.NativePythonDictionary, userDictionary.NativePythonDictionary);
                         if (pyResult == IntPtr.Zero || PythonInterop.PyErr_Occurred() != IntPtr.Zero)
                         {
-                            throw new PythonException(PythonInterop.PyErr_Fetch());
+                            throw PythonInterop.PyErr_Fetch();
                         }
 
                         PythonInterop.Py_DecRef(pyResult);
