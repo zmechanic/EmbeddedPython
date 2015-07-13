@@ -156,6 +156,11 @@ namespace EmbeddedPython.Internal
                 case 7:
                     result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], args[3], args[4], args[5], args[6], IntPtr.Zero);
                     break;
+                case 8:
+                    result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], IntPtr.Zero);
+                    break;
+                default:
+                    throw new PythonException(string.Format("Not supported number of {0} arguments for CallFunction method.", args.Length));
             }
 
             //PythonInterop.PyGILState_Invoke(() =>

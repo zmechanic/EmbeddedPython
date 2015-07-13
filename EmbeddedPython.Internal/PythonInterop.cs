@@ -384,6 +384,10 @@ namespace EmbeddedPython.Internal
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern IntPtr
+        PyObject_CallFunctionObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7, IntPtr arg8, IntPtr arg9);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
         PyObject_CallMethodObjArgs(IntPtr pointer, IntPtr arg1);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
@@ -413,6 +417,10 @@ namespace EmbeddedPython.Internal
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern IntPtr
         PyObject_CallMethodObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7, IntPtr arg8);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallMethodObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7, IntPtr arg8, IntPtr arg9);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern int
