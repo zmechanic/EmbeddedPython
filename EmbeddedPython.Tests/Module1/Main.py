@@ -16,4 +16,4 @@ class MyClass:
         self._x = 12
 
     def doSomething(self):
-        self._x++
+        self._x += 1

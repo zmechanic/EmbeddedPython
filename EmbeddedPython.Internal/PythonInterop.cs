@@ -352,15 +352,67 @@ namespace EmbeddedPython.Internal
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern IntPtr
-        PyObject_CallFunctionObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3);
-
-        //[DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
-        //internal static unsafe extern IntPtr
-        //PyObject_CallFunctionObjArgs(IntPtr pointer, params IntPtr[] args);
+        PyObject_CallFunctionObjArgs(IntPtr pointer, IntPtr arg1);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern IntPtr
-        PyObject_CallMethodObjArgs(IntPtr pointer, params IntPtr[] args);
+        PyObject_CallFunctionObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallFunctionObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallFunctionObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallFunctionObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallFunctionObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallFunctionObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallFunctionObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7, IntPtr arg8);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallMethodObjArgs(IntPtr pointer, IntPtr arg1);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallMethodObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallMethodObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallMethodObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallMethodObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallMethodObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallMethodObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyObject_CallMethodObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7, IntPtr arg8);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern int
@@ -1107,24 +1159,28 @@ namespace EmbeddedPython.Internal
 
             if (type != IntPtr.Zero)
             {
-                var exceptionTuples = PythonTypeConverter.ConvertToClrType<Tuple<string, Tuple<string, int, int, string>>>(value);
-                if (exceptionTuples != null)
+                var exceptionType = PythonTypeConverter.GetClrType(value);
+
+                if (exceptionType == typeof(string))
                 {
-                    return new PythonException(
-                        exceptionTuples.Item1,
-                        exceptionTuples.Item2.Item1,
-                        exceptionTuples.Item2.Item2,
-                        exceptionTuples.Item2.Item3,
-                        exceptionTuples.Item2.Item4);
+                    var s = PyString_ToString(value);
+                    return new PythonException(s);
                 }
 
-                //var s = PyString_ToString(value);
-                //if (s == null)
-                //{
-                //    return PyErr_Fetch();
-                //}
-
-                //return s;
+                if (exceptionType == typeof(Tuple))
+                {
+                    var exceptionTuples =
+                        PythonTypeConverter.ConvertToClrType<Tuple<string, Tuple<string, int, int, string>>>(value);
+                    if (exceptionTuples != null)
+                    {
+                        return new PythonException(
+                            exceptionTuples.Item1,
+                            exceptionTuples.Item2.Item1,
+                            exceptionTuples.Item2.Item2,
+                            exceptionTuples.Item2.Item3,
+                            exceptionTuples.Item2.Item4);
+                    }
+                }
             }
 
             return null;

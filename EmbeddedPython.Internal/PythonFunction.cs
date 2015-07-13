@@ -130,30 +130,57 @@ namespace EmbeddedPython.Internal
         {
             IntPtr result = IntPtr.Zero;
 
-            PythonInterop.PyGILState_Invoke(() =>
+            switch (args.Length)
             {
-                if (args.Length == 0)
-                {
-                    result = PythonInterop.PyObject_CallObject(_function, IntPtr.Zero);
-                }
-                else
-                {
-                    var tuple = PythonInterop.PyTuple_New(args.Length);
-
-                    for (var i = 0; i < args.Length; i++)
-                    {
-                        PythonInterop.PyTuple_SetItem(tuple, i, args[i]);
-                    }
-
+                case 0:
+                    result = PythonInterop.PyObject_CallFunctionObjArgs(_function, IntPtr.Zero);
+                    break;
+                case 1:
+                    result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], IntPtr.Zero);
+                    break;
+                case 2:
                     result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], IntPtr.Zero);
-                    //result = PythonInterop.PyObject_CallObject(_function, tuple);
-                }
+                    break;
+                case 3:
+                    result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], IntPtr.Zero);
+                    break;
+                case 4:
+                    result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], args[3], IntPtr.Zero);
+                    break;
+                case 5:
+                    result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], args[3], args[4], IntPtr.Zero);
+                    break;
+                case 6:
+                    result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], args[3], args[4], args[5], IntPtr.Zero);
+                    break;
+                case 7:
+                    result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], args[3], args[4], args[5], args[6], IntPtr.Zero);
+                    break;
+            }
 
-                if (result == IntPtr.Zero)
-                {
-                    throw PythonInterop.PyErr_Fetch();
-                }
-            });
+            //PythonInterop.PyGILState_Invoke(() =>
+            //{
+            //    if (args.Length == 0)
+            //    {
+            //        result = PythonInterop.PyObject_CallObject(_function, IntPtr.Zero);
+            //    }
+            //    else
+            //    {
+            //        var tuple = PythonInterop.PyTuple_New(args.Length);
+
+            //        for (var i = 0; i < args.Length; i++)
+            //        {
+            //            PythonInterop.PyTuple_SetItem(tuple, i, args[i]);
+            //        }
+
+            //        result = PythonInterop.PyObject_CallObject(_function, tuple);
+            //    }
+
+            //    if (result == IntPtr.Zero)
+            //    {
+            //        throw PythonInterop.PyErr_Fetch();
+            //    }
+            //});
 
             return result;
         }
