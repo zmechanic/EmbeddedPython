@@ -5,6 +5,8 @@ namespace EmbeddedPython.Internal
 {
     internal static class PythonInterop
     {
+        internal static IPythonFunction tb_format_exception;
+
         internal static IntPtr Py_None;
         internal static IntPtr Py_True;
         internal static IntPtr Py_False;
@@ -207,6 +209,14 @@ namespace EmbeddedPython.Internal
         PyEval_EvalCode(IntPtr code, IntPtr globals, IntPtr locals);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern IntPtr
+        PyEval_GetFrame();
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern int
+        PyFrame_GetLineNumber(IntPtr frame);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern string
         Py_GetProgramName();
 
@@ -344,7 +354,11 @@ namespace EmbeddedPython.Internal
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern IntPtr
-        PyObject_CallFunctionObjArgs(IntPtr pointer, params IntPtr[] args);
+        PyObject_CallFunctionObjArgs(IntPtr pointer, IntPtr arg1, IntPtr arg2, IntPtr arg3);
+
+        //[DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        //internal static unsafe extern IntPtr
+        //PyObject_CallFunctionObjArgs(IntPtr pointer, params IntPtr[] args);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern IntPtr
@@ -908,7 +922,7 @@ namespace EmbeddedPython.Internal
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern void
-        PyErr_NormalizeException(IntPtr ob, IntPtr val, IntPtr tb);
+        PyErr_NormalizeException(ref IntPtr ob, ref IntPtr val, ref IntPtr tb);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern IntPtr
@@ -1092,9 +1106,16 @@ namespace EmbeddedPython.Internal
             var traceback = IntPtr.Zero;
 
             PyErr_Fetch(ref type, ref value, ref traceback);
+            var k = PythonTypeConverter.GetClrType(value);
+            //PyErr_NormalizeException(ref type, ref value, ref traceback);
 
-            if (value != IntPtr.Zero)
+            if (type != IntPtr.Zero)
             {
+                if (tb_format_exception != null)
+                {
+                    tb_format_exception.Invoke<IntPtr, IntPtr, IntPtr>(type, value);
+                }
+
                 var s = PyString_ToString(value);
                 if (s == null)
                 {

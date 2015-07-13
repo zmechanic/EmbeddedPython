@@ -145,7 +145,8 @@ namespace EmbeddedPython.Internal
                         PythonInterop.PyTuple_SetItem(tuple, i, args[i]);
                     }
 
-                    result = PythonInterop.PyObject_CallObject(_function, tuple);
+                    result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], IntPtr.Zero);
+                    //result = PythonInterop.PyObject_CallObject(_function, tuple);
                 }
 
                 if (result == IntPtr.Zero)

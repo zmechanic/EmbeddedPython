@@ -16,6 +16,11 @@ namespace EmbeddedPython.Internal
 
             var t = value.GetType();
 
+            if (t == typeof(IntPtr))
+            {
+                return (IntPtr)value;
+            }
+
             if (t == typeof(bool))
             {
                 return (bool)value ? PythonInterop.Py_True : PythonInterop.Py_False;

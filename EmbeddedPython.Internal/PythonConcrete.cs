@@ -22,6 +22,9 @@ namespace EmbeddedPython.Internal
             PythonInterop.PyEval_InitThreads();
 
             _mainModule = new PythonModule("__main__");
+            
+            var tb = new PythonModule(null, "traceback");
+            PythonInterop.tb_format_exception = tb.GetFunction("format_exception_only");
 
             var pyBuiltIn = PythonInterop.PyDict_GetItemString(((PythonDictionary)_mainModule.Dictionary).NativePythonDictionary, "__builtins__");
 

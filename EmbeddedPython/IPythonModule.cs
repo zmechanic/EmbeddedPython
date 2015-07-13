@@ -19,6 +19,13 @@ namespace EmbeddedPython
         IPythonDictionary Dictionary { get; }
 
         /// <summary>
+        /// Gets Python function wrapper.
+        /// </summary>
+        /// <param name="functionName">Name of the Python function to get CLR invoke function for.</param>
+        /// <returns>Python function wrapper.</returns>
+        IPythonFunction GetFunction(string functionName);
+
+        /// <summary>
         /// Gets function to directly invoke Python function with single argument without obtaining <see cref="IPythonFunction"/> first.
         /// </summary>
         /// <typeparam name="T">Type of invocation argument.</typeparam>

@@ -52,15 +52,24 @@ namespace EmbeddedPython.Internal
             {
                 PythonInterop.PyGILState_Invoke(() =>
                 {
-                    var path = PythonInterop.PySys_GetObject("path");
-                    var item = PythonInterop.PyString_FromString(Path.Combine(Environment.CurrentDirectory, modulePath));
+                    IntPtr pathListItem = IntPtr.Zero;
+                    
+                    if (!string.IsNullOrEmpty(modulePath))
+                    {
+                        var path = PythonInterop.PySys_GetObject("path");
+                        pathListItem = PythonInterop.PyString_FromString(Path.Combine(Environment.CurrentDirectory, modulePath));
 
-                    PythonInterop.PyList_Append(path, item);
+                        PythonInterop.PyList_Append(path, pathListItem);
+                    }
 
                     var name = PythonInterop.PyString_FromString(moduleName);
                     module = PythonInterop.PyImport_Import(name);
 
-                    PythonInterop.Py_DecRef(item);
+                    if (pathListItem != IntPtr.Zero)
+                    {
+                        PythonInterop.Py_DecRef(pathListItem);
+                    }
+
                     PythonInterop.Py_DecRef(name);
 
                     if (module == IntPtr.Zero)
@@ -104,6 +113,11 @@ namespace EmbeddedPython.Internal
         public IPythonDictionary Dictionary
         {
             get { return _dictionary; }
+        }
+
+        public IPythonFunction GetFunction(string functionName)
+        {
+            return new PythonFunction(this, functionName);
         }
 
         public Func<T, TResult> GetFunction<T, TResult>(string functionName)
@@ -322,8 +336,7 @@ namespace EmbeddedPython.Internal
         {
             return Execute(code, null, resultVariables);
         }
-
-
+        
         public void Dispose()
         {
             Dispose(true);
