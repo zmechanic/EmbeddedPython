@@ -68,16 +68,19 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="PassThroughUnitTestsBase.cs" />
     <Compile Include="PythonDictionaryUnitTestsBase.cs" />
     <Compile Include="V2PythonDictionaryUnitTests.cs" />
     <Compile Include="V3PythonDictionaryUnitTests.cs" />
     <Compile Include="PythonModuleUnitTestsBase.cs" />
     <Compile Include="PythonUnitTestsBase.cs" />
-    <Compile Include="PassThroughUnitTestsBase.cs" />
+    <Compile Include="PythonFunctionUnitTestsBase.cs" />
     <Compile Include="PythonVersionSpecificUnitTestBase.cs" />
     <Compile Include="V2PythonModuleUnitTests.cs" />
     <Compile Include="V2PythonUnitTests.cs" />
+    <Compile Include="V2PythonFunctionUnitTests.cs" />
     <Compile Include="V3PythonModuleUnitTests.cs" />
+    <Compile Include="V3PythonFunctionUnitTests.cs" />
     <Compile Include="V3PythonUnitTests.cs" />
     <Compile Include="V3PassThroughUnitTests.cs" />
     <Compile Include="V2PassThroughUnitTests.cs" />
@@ -99,6 +102,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="EmbeddedPython.UnitTests.runsettings" />
+    <Content Include="Python\FunctionsInvokeTest\Main.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Python\PassThrough\Main.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

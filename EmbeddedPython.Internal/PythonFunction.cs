@@ -42,6 +42,11 @@ namespace EmbeddedPython.Internal
             GC.SuppressFinalize(this);
         }
 
+        public TResult Invoke<TResult>()
+        {
+            return PythonTypeConverter.ConvertToClrType<TResult>(Invoke());
+        }
+
         public TResult Invoke<T, TResult>(T arg)
         {
             return PythonTypeConverter.ConvertToClrType<TResult>(Invoke(

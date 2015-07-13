@@ -36,7 +36,7 @@
         }
 
         [TestCleanup]
-        public void TestCleanup()
+        public virtual void TestCleanup()
         {
             Python.Dispose();
         }

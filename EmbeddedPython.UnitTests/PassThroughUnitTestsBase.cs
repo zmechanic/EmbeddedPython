@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EmbeddedPython.UnitTests
 {
-    using System.Collections.Generic;
-
     public abstract class PassThroughUnitTestsBase : PythonVersionSpecificUnitTestBase
     {
         [TestMethod]

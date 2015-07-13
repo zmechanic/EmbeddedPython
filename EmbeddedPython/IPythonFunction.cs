@@ -8,6 +8,13 @@ namespace EmbeddedPython
     public interface IPythonFunction : IDisposable
     {
         /// <summary>
+        /// Invokes function with no arguments and returns result of function invocation converted to type <typeparamref name="TResult"/>.
+        /// </summary>
+        /// <typeparam name="TResult">Type of result.</typeparam>
+        /// <returns>Result of function invoke.</returns>
+        TResult Invoke<TResult>();
+
+        /// <summary>
         /// Invokes function with single argument and returns result of function invocation converted to type <typeparamref name="TResult"/>.
         /// </summary>
         /// <typeparam name="T">Type of invocation argument.</typeparam>
@@ -68,7 +75,7 @@ namespace EmbeddedPython
         /// <param name="arg2">Second argument.</param>
         /// <param name="arg3">Third argument.</param>
         /// <param name="arg4">Forth argument.</param>
-        /// <param name="arg5">Fifh argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
         /// <returns>Result of function invoke.</returns>
         TResult Invoke<T1, T2, T3, T4, T5, TResult>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
 
@@ -86,7 +93,7 @@ namespace EmbeddedPython
         /// <param name="arg2">Second argument.</param>
         /// <param name="arg3">Third argument.</param>
         /// <param name="arg4">Forth argument.</param>
-        /// <param name="arg5">Fifh argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
         /// <param name="arg6">Sixth argument.</param>
         /// <returns>Result of function invoke.</returns>
         TResult Invoke<T1, T2, T3, T4, T5, T6, TResult>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6);
@@ -106,7 +113,7 @@ namespace EmbeddedPython
         /// <param name="arg2">Second argument.</param>
         /// <param name="arg3">Third argument.</param>
         /// <param name="arg4">Forth argument.</param>
-        /// <param name="arg5">Fifh argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
         /// <param name="arg6">Sixth argument.</param>
         /// <param name="arg7">Seventh argument.</param>
         /// <returns>Result of function invoke.</returns>
@@ -128,7 +135,7 @@ namespace EmbeddedPython
         /// <param name="arg2">Second argument.</param>
         /// <param name="arg3">Third argument.</param>
         /// <param name="arg4">Forth argument.</param>
-        /// <param name="arg5">Fifh argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
         /// <param name="arg6">Sixth argument.</param>
         /// <param name="arg7">Seventh argument.</param>
         /// <param name="arg8">Eighth argument.</param>
