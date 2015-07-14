@@ -370,18 +370,16 @@ namespace EmbeddedPython.Internal
                     genericType == typeof(IReadOnlyList<>) ||
                     genericType == typeof(IReadOnlyCollection<>))
                 {
-                    var itemsTargetType = genericArgTypes[0];
-                    var numberOfItems = PythonInterop.PyList_Size(value);
-
-                    var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(itemsTargetType));
-
-                    for (var i = 0; i < numberOfItems; i++)
-                    {
-                        list.Add(ConvertToClrType(PythonInterop.PyList_GetItem(value, i), itemsTargetType));
-                    }
-
-                    return list;
+                    return PythonListToClrList(value, genericArgTypes[0]);
                 }
+            }
+
+            if (t.IsArray && t.GetArrayRank() == 1)
+            {
+                var list = PythonListToClrList(value, t.GetElementType());
+                var array = Activator.CreateInstance(t, list.Count);
+                list.CopyTo((Array)array, 0);
+                return array;
             }
 
             if (t == typeof(object))
@@ -480,6 +478,20 @@ namespace EmbeddedPython.Internal
             {
                 PythonInterop.Py_DecRef(pyType);
             }
-        }         
+        }
+
+        private static IList PythonListToClrList(IntPtr pyList, Type elementType)
+        {
+            var numberOfItems = PythonInterop.PyList_Size(pyList);
+
+            var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+
+            for (var i = 0; i < numberOfItems; i++)
+            {
+                list.Add(ConvertToClrType(PythonInterop.PyList_GetItem(pyList, i), elementType));
+            }
+
+            return list;
+        }
     }
 }

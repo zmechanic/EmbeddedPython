@@ -59,7 +59,7 @@ namespace EmbeddedPython.Internal
         internal PythonDictionary(IntPtr nativePythonDictionary)
         {
             _dictionary = nativePythonDictionary;
-            PythonInterop.PyGILState_Invoke(() =>PythonInterop.Py_IncRef(_dictionary));
+            PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_IncRef(_dictionary));
         }
 
         public IntPtr NativePythonDictionary
