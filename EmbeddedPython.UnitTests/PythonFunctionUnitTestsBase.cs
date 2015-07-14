@@ -2,6 +2,8 @@
 
 namespace EmbeddedPython.UnitTests
 {
+    using System;
+
     public class PythonFunctionUnitTestsBase : PythonVersionSpecificUnitTestBase
     {
         private const string ModulePath = "Python/FunctionInvokeTest";
@@ -131,6 +133,74 @@ namespace EmbeddedPython.UnitTests
                 var result = testTarget.Invoke<string, string, string, string, string, string, string, string, string>("a", "b", "c", "d", "e", "f", "g", "h");
 
                 Assert.AreEqual("abcdefgh", result);
+            }
+        }
+
+        [TestMethod]
+        public void Invoke_WithDispose_StressTest()
+        {
+            var random = new Random(555);
+
+            for (var i = 0; i < 10000; i++)
+            {
+                var v1 = ((char)random.Next(32, 127)).ToString();
+                var v2 = ((char)random.Next(32, 127)).ToString();
+                var v3 = ((char)random.Next(32, 127)).ToString();
+                var v4 = ((char)random.Next(32, 127)).ToString();
+                var v5 = ((char)random.Next(32, 127)).ToString();
+                var v6 = ((char)random.Next(32, 127)).ToString();
+                var v7 = ((char)random.Next(32, 127)).ToString();
+                var v8 = ((char)random.Next(32, 127)).ToString();
+
+                using (var testTarget = _module.GetFunction("func8"))
+                {
+                    var result =
+                        testTarget.Invoke<string, string, string, string, string, string, string, string, string>(
+                            v1,
+                            v2,
+                            v3,
+                            v4,
+                            v5,
+                            v6,
+                            v7,
+                            v8);
+
+                    Assert.AreEqual(v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8, result);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void Invoke_WithoutDispose_StressTest()
+        {
+            var random = new Random(555);
+
+            using (var testTarget = _module.GetFunction("func8"))
+            {
+                for (var i = 0; i < 10000; i++)
+                {
+                    var v1 = ((char)random.Next(32, 127)).ToString();
+                    var v2 = ((char)random.Next(32, 127)).ToString();
+                    var v3 = ((char)random.Next(32, 127)).ToString();
+                    var v4 = ((char)random.Next(32, 127)).ToString();
+                    var v5 = ((char)random.Next(32, 127)).ToString();
+                    var v6 = ((char)random.Next(32, 127)).ToString();
+                    var v7 = ((char)random.Next(32, 127)).ToString();
+                    var v8 = ((char)random.Next(32, 127)).ToString();
+
+                    var result =
+                        testTarget.Invoke<string, string, string, string, string, string, string, string, string>(
+                            v1,
+                            v2,
+                            v3,
+                            v4,
+                            v5,
+                            v6,
+                            v7,
+                            v8);
+
+                    Assert.AreEqual(v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8, result);
+                }
             }
         }
     }

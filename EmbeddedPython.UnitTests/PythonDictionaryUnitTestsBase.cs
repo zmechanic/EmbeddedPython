@@ -5,6 +5,16 @@ namespace EmbeddedPython.UnitTests
     public abstract class PythonDictionaryUnitTestsBase : PythonVersionSpecificUnitTestBase
     {
         [TestMethod]
+        public void Dictionary_Create_StressTest()
+        {
+            for (var i = 0; i < 10000; i++)
+            {
+                var testTarget = Python.Factory.CreateDictionary();
+                testTarget.Dispose();
+            }
+        }
+
+        [TestMethod]
         public void Indexer_Set_Succeeds()
         {
             var testTarget = Python.Factory.CreateDictionary();

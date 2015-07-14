@@ -18,6 +18,16 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
+        public void ImportModule_ByFileName_StressTest()
+        {
+            for (var i = 0; i < 10000; i++)
+            {
+                var testTarget = Python.ImportModule("Python/PassThrough", "Main");
+                testTarget.Dispose();
+            }
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(PythonException))]
         public void ImportModule_ByIncorrectPath_ThrowsException()
         {
