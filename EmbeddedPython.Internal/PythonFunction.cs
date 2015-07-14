@@ -4,6 +4,7 @@ namespace EmbeddedPython.Internal
 {
     public class PythonFunction : IPythonFunction
     {
+        private bool _disposed;
         private readonly IntPtr _function;
 
         internal PythonFunction(PythonModule module, string functionName)
@@ -40,6 +41,19 @@ namespace EmbeddedPython.Internal
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    //PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_DecRef(_function));
+                }
+
+                _disposed = true;
+            }
         }
 
         public TResult Invoke<TResult>()
@@ -230,14 +244,6 @@ namespace EmbeddedPython.Internal
             PythonInterop.Py_DecRef(pyarg7);
             });
             return result;
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                //PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_DecRef(_function));
-            }
         }
 
         private IntPtr Invoke(params IntPtr[] args)

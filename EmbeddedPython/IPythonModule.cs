@@ -31,7 +31,7 @@ namespace EmbeddedPython
         /// <typeparam name="T">Type of invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of function invocation result.</typeparam>
         /// <param name="functionName">Name of the Python function to get CLR invoke function for.</param>
-        /// <returns>Function.</returns>
+        /// <returns>.NET function.</returns>
         Func<T, TResult> GetFunction<T, TResult>(string functionName);
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace EmbeddedPython
         /// <typeparam name="T2">Type of second invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of function invocation result.</typeparam>
         /// <param name="functionName">Name of the Python function to get CLR invoke function for.</param>
-        /// <returns>Function.</returns>
+        /// <returns>.NET function.</returns>
         Func<T1, T2, TResult> GetFunction<T1, T2, TResult>(string functionName);
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace EmbeddedPython
         /// <typeparam name="T3">Type of third invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of function invocation result.</typeparam>
         /// <param name="functionName">Name of the Python function to get CLR invoke function for.</param>
-        /// <returns>Function.</returns>
+        /// <returns>.NET function.</returns>
         Func<T1, T2, T3, TResult> GetFunction<T1, T2, T3, TResult>(string functionName);
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace EmbeddedPython
         /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of function invocation result.</typeparam>
         /// <param name="functionName">Name of the Python function to get CLR invoke function for.</param>
-        /// <returns>Function.</returns>
+        /// <returns>.NET function.</returns>
         Func<T1, T2, T3, T4, TResult> GetFunction<T1, T2, T3, T4, TResult>(string functionName);
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace EmbeddedPython
         /// <typeparam name="T5">Type of fifth invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of function invocation result.</typeparam>
         /// <param name="functionName">Name of the Python function to get CLR invoke function for.</param>
-        /// <returns>Function.</returns>
+        /// <returns>.NET function.</returns>
         Func<T1, T2, T3, T4, T5, TResult> GetFunction<T1, T2, T3, T4, T5, TResult>(string functionName);
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace EmbeddedPython
         /// <typeparam name="T6">Type of sixth invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of function invocation result.</typeparam>
         /// <param name="functionName">Name of the Python function to get CLR invoke function for.</param>
-        /// <returns>Function.</returns>
+        /// <returns>.NET function.</returns>
         Func<T1, T2, T3, T4, T5, T6, TResult> GetFunction<T1, T2, T3, T4, T5, T6, TResult>(string functionName);
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace EmbeddedPython
         /// <typeparam name="T7">Type of seventh invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of function invocation result.</typeparam>
         /// <param name="functionName">Name of the Python function to get CLR invoke function for.</param>
-        /// <returns>Function.</returns>
+        /// <returns>.NET function.</returns>
         Func<T1, T2, T3, T4, T5, T6, T7, TResult> GetFunction<T1, T2, T3, T4, T5, T6, T7, TResult>(string functionName);
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace EmbeddedPython
         /// <typeparam name="T8">Type of eighth invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of function invocation result.</typeparam>
         /// <param name="functionName">Name of the Python function to get CLR invoke function for.</param>
-        /// <returns>Function.</returns>
+        /// <returns>.NET function.</returns>
         Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> GetFunction<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(string functionName);
 
         /// <summary>

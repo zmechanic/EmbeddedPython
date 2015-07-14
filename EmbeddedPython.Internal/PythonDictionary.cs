@@ -4,6 +4,7 @@ namespace EmbeddedPython.Internal
 {
     internal class PythonDictionary : IPythonDictionary
     {
+        private bool _disposed;
         private readonly IntPtr _dictionary;
 
         internal PythonDictionary()
@@ -154,9 +155,14 @@ namespace EmbeddedPython.Internal
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!_disposed)
             {
-                PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_DecRef(this._dictionary));
+                if (disposing)
+                {
+                    PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_DecRef(this._dictionary));
+                }
+
+                _disposed = true;
             }
         }
     }

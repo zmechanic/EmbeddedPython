@@ -6,6 +6,7 @@ namespace EmbeddedPython.Internal
 {
     internal class PythonModule : IPythonModule
     {
+        private bool _disposed;
         private readonly string _modulePath;
         private readonly string _moduleName;
         private readonly IntPtr _module;
@@ -113,6 +114,31 @@ namespace EmbeddedPython.Internal
         public IPythonDictionary Dictionary
         {
             get { return _dictionary; }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    foreach (var nameAndFunctionKeyValuePair in _registeredFunctions)
+                    {
+                        nameAndFunctionKeyValuePair.Value.Dispose();
+                    }
+
+                    _dictionary.Dispose();
+                    PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_DecRef(_module));
+                }
+
+                _disposed = true;
+            }
         }
 
         public IPythonFunction GetFunction(string functionName)
@@ -337,26 +363,6 @@ namespace EmbeddedPython.Internal
             return Execute(code, null, resultVariables);
         }
         
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                foreach (var nameAndFunctionKeyValuePair in _registeredFunctions)
-                {
-                    nameAndFunctionKeyValuePair.Value.Dispose();
-                }
-
-                _dictionary.Dispose();
-                PythonInterop.PyGILState_Invoke(() =>PythonInterop.Py_DecRef(_module));
-            }
-        }
-
         private PythonFunction GetFunction(string functionName, int typeHash)
         {
             PythonFunction function;
