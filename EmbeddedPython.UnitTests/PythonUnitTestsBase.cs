@@ -19,6 +19,13 @@ namespace EmbeddedPython.UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(PythonException))]
+        public void ImportModule_ByIncorrectPath_ThrowsException()
+        {
+            Python.ImportModule("Python/NotAPath", "AModule");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(PythonException))]
         public void ImportModule_ByIncorrectFileName_ThrowsException()
         {
             Python.ImportModule("Python/PassThrough", "AModule");

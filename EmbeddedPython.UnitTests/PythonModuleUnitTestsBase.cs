@@ -6,20 +6,20 @@ namespace EmbeddedPython.UnitTests
 {
     public abstract class PythonModuleUnitTestsBase : PythonVersionSpecificUnitTestBase
     {
-        private const string PassThroughModulePath = "Python/PassThrough";
-        private const string PassThroughModuleMain = "Main";
+        private const string ModulePath = "Python/PassThrough";
+        private const string ModuleMain = "Main";
 
         [TestMethod]
         public void FullName_Get_ReturnsCorrectName()
         {
-            var module = Python.ImportModule(PassThroughModulePath, PassThroughModuleMain);
-            Assert.AreEqual(PassThroughModulePath + "/" + PassThroughModuleMain, module.FullName);
+            var module = Python.ImportModule(ModulePath, ModuleMain);
+            Assert.AreEqual(ModulePath + "/" + ModuleMain, module.FullName);
         }
 
         [TestMethod]
         public void GetFunction_ByName_ReturnsFunction()
         {
-            var module = Python.ImportModule(PassThroughModulePath, PassThroughModuleMain);
+            var module = Python.ImportModule(ModulePath, ModuleMain);
             var func = module.GetFunction<int, int>("pass_value_through");
             Assert.IsNotNull(func);
         }
@@ -28,14 +28,14 @@ namespace EmbeddedPython.UnitTests
         [ExpectedException(typeof(PythonException))]
         public void GetFunction_ByIncorrectName_ThrowsException()
         {
-            var module = Python.ImportModule(PassThroughModulePath, PassThroughModuleMain);
+            var module = Python.ImportModule(ModulePath, ModuleMain);
             module.GetFunction<int, int>("not_a_function");
         }
 
         [TestMethod]
         public void GetFunction_ByName_ReturnsSameFunction()
         {
-            var module = Python.ImportModule(PassThroughModulePath, PassThroughModuleMain);
+            var module = Python.ImportModule(ModulePath, ModuleMain);
             var func1 = module.GetFunction<int, int>("pass_value_through");
             var func2 = module.GetFunction<int, int>("pass_value_through");
             Assert.AreSame(func1.Method, func2.Method);

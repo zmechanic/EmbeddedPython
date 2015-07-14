@@ -3,7 +3,7 @@
 namespace EmbeddedPython.UnitTests
 {
     [TestClass]
-    [DeploymentItem(@"Python\FunctionsInvokeTest\Main.py")]
+    [DeploymentItem(@"Python\FunctionInvokeTest\Main.py")]
     public class V3PythonFunctionUnitTests : PythonFunctionUnitTestsBase
     {
     }
