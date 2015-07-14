@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EmbeddedPython.UnitTests
 {
@@ -18,7 +19,7 @@ namespace EmbeddedPython.UnitTests
         public void Indexer_Set_Succeeds()
         {
             var testTarget = Python.Factory.CreateDictionary();
-            testTarget["testValue"] = 1;
+            testTarget["testKey"] = 1;
         }
 
         [TestMethod]
@@ -27,9 +28,9 @@ namespace EmbeddedPython.UnitTests
             const int value = 1;
 
             var testTarget = Python.Factory.CreateDictionary();
-            testTarget["testValue"] = value;
+            testTarget["testKey"] = value;
 
-            var result = testTarget["testValue"];
+            var result = testTarget["testKey"];
 
             Assert.AreEqual(value, result);
         }
@@ -38,7 +39,7 @@ namespace EmbeddedPython.UnitTests
         public void Set_GenericType_Succeeds()
         {
             var testTarget = Python.Factory.CreateDictionary();
-            testTarget.Set("testValue", 1);
+            testTarget.Set("testKey", 1);
         }
 
         [TestMethod]
@@ -47,9 +48,9 @@ namespace EmbeddedPython.UnitTests
             const int value = 1;
 
             var testTarget = Python.Factory.CreateDictionary();
-            testTarget.Set("testValue", value);
+            testTarget.Set("testKey", value);
 
-            var result = testTarget.Get<int>("testValue");
+            var result = testTarget.Get<int>("testKey");
 
             Assert.AreEqual(value, result);
         }
@@ -60,11 +61,57 @@ namespace EmbeddedPython.UnitTests
             const int value = 1;
 
             var testTarget = Python.Factory.CreateDictionary();
-            testTarget.Set("testValue", value);
+            testTarget.Set("testKey", value);
 
-            var result = testTarget.Get("testValue", typeof(int));
+            var result = testTarget.Get("testKey", typeof(int));
 
             Assert.AreEqual(value, result);
+        }
+
+        [TestMethod]
+        public void Clear_NoParameters_ClearsDictionary()
+        {
+            var testTarget = Python.Factory.CreateDictionary();
+            testTarget.Set("testKey", 1);
+            testTarget.Clear();
+
+            Assert.IsFalse(testTarget.HasKey("testKey"));
+        }
+
+        [TestMethod]
+        public void HasKey_Property_ReturnsCorrectValue()
+        {
+            var testTarget = Python.Factory.CreateDictionary();
+            testTarget.Set("testKey", 1);
+
+            Assert.IsTrue(testTarget.HasKey("testKey"));
+            Assert.IsFalse(testTarget.HasKey("missingKey"));
+        }
+
+        [TestMethod]
+        public void Keys_Property_ReturnsCorrectList()
+        {
+            var testTarget = Python.Factory.CreateDictionary();
+            testTarget.Set("testKey", 1);
+            testTarget.Set("someOtherKey", 1);
+
+            var result = testTarget.Keys.ToList();
+
+            CollectionAssert.Contains(result, "testKey");
+            CollectionAssert.Contains(result, "someOtherKey");
+        }
+
+        [TestMethod]
+        public void Delete_ByKey_RemovesItem()
+        {
+            var testTarget = Python.Factory.CreateDictionary();
+            testTarget.Set("testKey", 1);
+            testTarget.Set("someOtherKey", 1);
+
+            testTarget.Delete("testKey");
+
+            Assert.IsFalse(testTarget.HasKey("testKey"));
+            Assert.IsTrue(testTarget.HasKey("someOtherKey"));
         }
 
         [TestMethod]

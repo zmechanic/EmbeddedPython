@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace EmbeddedPython.Internal
 {
@@ -78,6 +79,17 @@ namespace EmbeddedPython.Internal
             }
         }
 
+        public IEnumerable<string> Keys
+        {
+            get
+            {
+                var pyList = PythonInterop.PyDict_Keys(_dictionary);
+                var list = PythonTypeConverter.ConvertToClrType<IEnumerable<string>>(pyList);
+
+                return list;
+            }
+        }
+
         public void Set<T>(string key, T value)
         {
             try
@@ -145,6 +157,38 @@ namespace EmbeddedPython.Internal
             }
 
             return netVar;
+        }
+
+        public bool HasKey(string key)
+        {
+            bool hasKey = false;
+
+            PythonInterop.PyGILState_Invoke(() =>
+            {
+                var pyKey = PythonTypeConverter.ConvertToPythonType(key);
+                hasKey = PythonInterop.PyMapping_HasKey(_dictionary, pyKey) != 0;
+                PythonInterop.Py_DecRef(pyKey);
+            });
+
+            return hasKey;
+        }
+
+        public void Delete(string key)
+        {
+            PythonInterop.PyGILState_Invoke(() =>
+            {
+                var pyKey = PythonTypeConverter.ConvertToPythonType(key);
+                PythonInterop.PyDict_DelItem(_dictionary, pyKey);
+                PythonInterop.Py_DecRef(pyKey);
+            });
+        }
+
+        public void Clear()
+        {
+            PythonInterop.PyGILState_Invoke(() =>
+            {
+                PythonInterop.PyDict_Clear(_dictionary);
+            });
         }
 
         public void Dispose()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -363,6 +364,23 @@ namespace EmbeddedPython.Internal
                     }
 
                     return Activator.CreateInstance(t, values);
+                }
+
+                if (genericType == typeof(IEnumerable<>) ||
+                    genericType == typeof(IReadOnlyList<>) ||
+                    genericType == typeof(IReadOnlyCollection<>))
+                {
+                    var itemsTargetType = genericArgTypes[0];
+                    var numberOfItems = PythonInterop.PyList_Size(value);
+
+                    var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(itemsTargetType));
+
+                    for (var i = 0; i < numberOfItems; i++)
+                    {
+                        list.Add(ConvertToClrType(PythonInterop.PyList_GetItem(value, i), itemsTargetType));
+                    }
+
+                    return list;
                 }
             }
 
