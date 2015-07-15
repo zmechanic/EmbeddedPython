@@ -376,10 +376,7 @@ namespace EmbeddedPython.Internal
 
             if (t.IsArray && t.GetArrayRank() == 1)
             {
-                var list = PythonListToClrList(value, t.GetElementType());
-                var array = Activator.CreateInstance(t, list.Count);
-                list.CopyTo((Array)array, 0);
-                return array;
+                return PythonListToClrArray(value, t.GetElementType());
             }
 
             if (t == typeof(object))
@@ -492,6 +489,20 @@ namespace EmbeddedPython.Internal
             }
 
             return list;
+        }
+
+        private static Array PythonListToClrArray(IntPtr pyList, Type elementType)
+        {
+            var numberOfItems = PythonInterop.PyList_Size(pyList);
+
+            var array = (object[])Activator.CreateInstance(elementType.MakeArrayType(), numberOfItems);
+
+            for (var i = 0; i < numberOfItems; i++)
+            {
+                array[i] = ConvertToClrType(PythonInterop.PyList_GetItem(pyList, i), elementType);
+            }
+
+            return array;
         }
     }
 }

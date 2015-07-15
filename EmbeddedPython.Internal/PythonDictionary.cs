@@ -185,10 +185,7 @@ namespace EmbeddedPython.Internal
 
         public void Clear()
         {
-            PythonInterop.PyGILState_Invoke(() =>
-            {
-                PythonInterop.PyDict_Clear(_dictionary);
-            });
+            PythonInterop.PyGILState_Invoke(() => PythonInterop.PyDict_Clear(this._dictionary));
         }
 
         public void Dispose()
