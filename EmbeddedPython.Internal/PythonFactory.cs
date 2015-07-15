@@ -7,9 +7,9 @@
             return new PythonDictionary();
         }
 
-        public IPythonTuple CreateTuple()
+        public IPythonTuple CreateTuple(int size)
         {
-            return new PythonTuple();
+            return new PythonTuple(size);
         }
 
         public IPythonList CreateList()

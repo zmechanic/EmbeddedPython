@@ -69,9 +69,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="PassThroughUnitTestsBase.cs" />
+    <Compile Include="PythonTupleUnitTestsBase.cs" />
     <Compile Include="PythonDictionaryUnitTestsBase.cs" />
     <Compile Include="PythonFunctionUnitTestsBase.cs" />
+    <Compile Include="V2PythonTupleUnitTests.cs" />
     <Compile Include="V2PythonDictionaryUnitTests.cs" />
+    <Compile Include="V3PythonTuplUnitTests.cs" />
     <Compile Include="V3PythonDictionaryUnitTests.cs" />
     <Compile Include="PythonModuleUnitTestsBase.cs" />
     <Compile Include="PythonUnitTestsBase.cs" />

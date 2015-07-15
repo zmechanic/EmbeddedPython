@@ -14,8 +14,9 @@
         /// <summary>
         /// Creates Python tuple.
         /// </summary>
+        /// <param name="size">Number of items in the tuple.</param>
         /// <returns>Newly created Python tuple.</returns>
-        IPythonTuple CreateTuple();
+        IPythonTuple CreateTuple(int size);
 
         /// <summary>
         /// Creates Python list.

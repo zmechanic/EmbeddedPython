@@ -15,17 +15,17 @@ namespace EmbeddedPython.Internal
                 return PythonInterop.Py_None;
             }
 
-            var t = value.GetType();
+            if (value is PythonObject)
+            {
+                return ((PythonObject)value).NativePythonObject;
+            }
 
-            if (t == typeof(IntPtr))
+            if (value is IntPtr)
             {
                 return (IntPtr)value;
             }
 
-            if (t == typeof(PythonObject))
-            {
-                return ((PythonObject)value).NativePythonObject;
-            }
+            var t = value.GetType();
 
             if (t == typeof(bool))
             {

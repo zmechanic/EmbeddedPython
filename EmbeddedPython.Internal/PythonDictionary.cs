@@ -22,7 +22,7 @@ namespace EmbeddedPython.Internal
             }
             catch (Exception ex)
             {
-                throw new PythonException(string.Format("Cannot create dictionary. Encountered Python error \"{0}\".", ex.Message), ex);
+                throw new PythonException(string.Format("Cannot create Python dictionary. Encountered Python error \"{0}\".", ex.Message), ex);
             }
 
             NativePythonObject = dictionary;
@@ -53,9 +53,9 @@ namespace EmbeddedPython.Internal
             NativePythonObject = dictionary;
         }
 
-        internal PythonDictionary(IntPtr nativePythonDictionary) 
+        internal PythonDictionary(IntPtr nativePythonObject) 
         {
-            NativePythonObject = nativePythonDictionary;
+            NativePythonObject = nativePythonObject;
             PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_IncRef(NativePythonObject));
         }
 
@@ -67,7 +67,7 @@ namespace EmbeddedPython.Internal
             }
             set
             {
-                this.Set(key, value);
+                Set(key, value);
             }
         }
 

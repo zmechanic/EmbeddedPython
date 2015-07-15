@@ -12,7 +12,7 @@ namespace EmbeddedPython
         /// Gets or sets value of specified key.
         /// </summary>
         /// <param key="key">Key name.</param>
-        /// <returns>Key value.</returns>
+        /// <returns>Item value.</returns>
         object this[string key] { get; set; }
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace EmbeddedPython
         IEnumerable<string> Keys { get; }
 
         /// <summary>
-        /// Adds item into dictionary.
+        /// Adds item into the dictionary.
         /// </summary>
         /// <typeparam key="T">Type of value.</typeparam>
         /// <param key="key">Name of dictionary item to be added.</param>
@@ -29,7 +29,7 @@ namespace EmbeddedPython
         void Set<T>(string key, T value);
 
         /// <summary>
-        /// Gets item value from dictionary.
+        /// Gets item value from the dictionary.
         /// </summary>
         /// <typeparam key="T">Type of value.</typeparam>
         /// <param key="key">Name of dictionary item.</param>
@@ -37,7 +37,7 @@ namespace EmbeddedPython
         T Get<T>(string key);
 
         /// <summary>
-        /// Gets item value from dictionary.
+        /// Gets item value from the dictionary.
         /// </summary>
         /// <param key="key">Name of dictionary item.</param>
         /// <param key="t">Type of value.</param>
