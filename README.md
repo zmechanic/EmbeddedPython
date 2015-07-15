@@ -9,3 +9,5 @@ It also makes heavy use of interfaces, which allows it to work identivally for b
 It provides automatic type conversion and handles discrepancies between Python 2 and Python 3 internally, so you can enjoy coding, not muddling around. This means, Unicode Strings and Ints are handled properly, which is a big drawback for Python version upgrade.
 
 Project is fully covered with Unit Test, including stress tests to ensure no memory leaks on Python side are introduced.
+
+The ultimate goal of this project is to get Python hosted and running from C# application on Raspberry Pi.
