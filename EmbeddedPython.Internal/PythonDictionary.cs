@@ -3,11 +3,8 @@ using System.Collections.Generic;
 
 namespace EmbeddedPython.Internal
 {
-    internal class PythonDictionary : IPythonDictionary
+    internal class PythonDictionary : PythonObject, IPythonDictionary
     {
-        private bool _disposed;
-        private readonly IntPtr _dictionary;
-
         internal PythonDictionary()
         {
             var dictionary = IntPtr.Zero;
@@ -28,7 +25,7 @@ namespace EmbeddedPython.Internal
                 throw new PythonException(string.Format("Cannot create dictionary. Encountered Python error \"{0}\".", ex.Message), ex);
             }
 
-            _dictionary = dictionary;
+            NativePythonObject = dictionary;
         }
 
         internal PythonDictionary(PythonModule module)
@@ -53,18 +50,13 @@ namespace EmbeddedPython.Internal
                 throw new PythonException(string.Format("Cannot create dictionary for module \"{0}\". Encountered Python error \"{1}\".", module.FullName, ex.Message), ex);
             }
 
-            _dictionary = dictionary;
+            NativePythonObject = dictionary;
         }
 
-        internal PythonDictionary(IntPtr nativePythonDictionary)
+        internal PythonDictionary(IntPtr nativePythonDictionary) 
         {
-            _dictionary = nativePythonDictionary;
-            PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_IncRef(_dictionary));
-        }
-
-        public IntPtr NativePythonDictionary
-        {
-            get { return _dictionary; }
+            NativePythonObject = nativePythonDictionary;
+            PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_IncRef(NativePythonObject));
         }
 
         public object this[string key]
@@ -83,7 +75,7 @@ namespace EmbeddedPython.Internal
         {
             get
             {
-                var pyList = PythonInterop.PyDict_Keys(_dictionary);
+                var pyList = PythonInterop.PyDict_Keys(NativePythonObject);
                 var list = PythonTypeConverter.ConvertToClrType<IEnumerable<string>>(pyList);
 
                 return list;
@@ -97,7 +89,7 @@ namespace EmbeddedPython.Internal
                 PythonInterop.PyGILState_Invoke(() =>
                 {
                     var pyVar = PythonTypeConverter.ConvertToPythonType(value);
-                    if (PythonInterop.PyDict_SetItemString(_dictionary, key, pyVar) != 0)
+                    if (PythonInterop.PyDict_SetItemString(NativePythonObject, key, pyVar) != 0)
                     {
                         throw PythonInterop.PyErr_Fetch();
                     }
@@ -117,7 +109,7 @@ namespace EmbeddedPython.Internal
             {
                 PythonInterop.PyGILState_Invoke(() =>
                 {
-                    var pyVar = PythonInterop.PyDict_GetItemString(_dictionary, key);
+                    var pyVar = PythonInterop.PyDict_GetItemString(NativePythonObject, key);
                     if (pyVar == IntPtr.Zero)
                     {
                         throw PythonInterop.PyErr_Fetch();
@@ -142,7 +134,7 @@ namespace EmbeddedPython.Internal
             {
                 PythonInterop.PyGILState_Invoke(() =>
                 {
-                    var pyVar = PythonInterop.PyDict_GetItemString(_dictionary, key);
+                    var pyVar = PythonInterop.PyDict_GetItemString(NativePythonObject, key);
                     if (pyVar == IntPtr.Zero)
                     {
                         throw PythonInterop.PyErr_Fetch();
@@ -166,7 +158,7 @@ namespace EmbeddedPython.Internal
             PythonInterop.PyGILState_Invoke(() =>
             {
                 var pyKey = PythonTypeConverter.ConvertToPythonType(key);
-                hasKey = PythonInterop.PyMapping_HasKey(_dictionary, pyKey) != 0;
+                hasKey = PythonInterop.PyMapping_HasKey(NativePythonObject, pyKey) != 0;
                 PythonInterop.Py_DecRef(pyKey);
             });
 
@@ -178,32 +170,26 @@ namespace EmbeddedPython.Internal
             PythonInterop.PyGILState_Invoke(() =>
             {
                 var pyKey = PythonTypeConverter.ConvertToPythonType(key);
-                PythonInterop.PyDict_DelItem(_dictionary, pyKey);
+                PythonInterop.PyDict_DelItem(NativePythonObject, pyKey);
                 PythonInterop.Py_DecRef(pyKey);
             });
         }
 
         public void Clear()
         {
-            PythonInterop.PyGILState_Invoke(() => PythonInterop.PyDict_Clear(this._dictionary));
+            PythonInterop.PyGILState_Invoke(() => PythonInterop.PyDict_Clear(NativePythonObject));
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
+            if (!IsDisposed)
             {
                 if (disposing)
                 {
-                    PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_DecRef(this._dictionary));
+                    PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_DecRef(NativePythonObject));
                 }
 
-                _disposed = true;
+                base.Dispose(disposing);
             }
         }
     }

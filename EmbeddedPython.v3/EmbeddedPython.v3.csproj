@@ -79,8 +79,17 @@
     <Compile Include="..\EmbeddedPython.Internal\PythonInterop.cs">
       <Link>PythonInterop.cs</Link>
     </Compile>
+    <Compile Include="..\EmbeddedPython.Internal\PythonList.cs">
+      <Link>PythonList.cs</Link>
+    </Compile>
     <Compile Include="..\EmbeddedPython.Internal\PythonModule.cs">
       <Link>PythonModule.cs</Link>
+    </Compile>
+    <Compile Include="..\EmbeddedPython.Internal\PythonObject.cs">
+      <Link>PythonObject.cs</Link>
+    </Compile>
+    <Compile Include="..\EmbeddedPython.Internal\PythonTuple.cs">
+      <Link>PythonTuple.cs</Link>
     </Compile>
     <Compile Include="..\EmbeddedPython.Internal\PythonTypeConverter.cs">
       <Link>PythonTypeConverter.cs</Link>

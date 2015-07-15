@@ -6,5 +6,15 @@
         {
             return new PythonDictionary();
         }
+
+        public IPythonTuple CreateTuple()
+        {
+            return new PythonTuple();
+        }
+
+        public IPythonList CreateList()
+        {
+            return new PythonList();
+        }
     }
 }

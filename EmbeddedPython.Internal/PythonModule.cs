@@ -225,7 +225,7 @@ namespace EmbeddedPython.Internal
                         //    throw PythonInterop.PyErr_Fetch();
                         //}
 
-                        var pyResult = PythonInterop.PyRun_String(code, PythonInterop.Py_file_input, _dictionary.NativePythonDictionary, userDictionary.NativePythonDictionary);
+                        var pyResult = PythonInterop.PyRun_String(code, PythonInterop.Py_file_input, _dictionary.NativePythonObject, userDictionary.NativePythonObject);
                         //var pyValue = PythonInterop.PyEval_EvalCode(cc, _mainModuleDictionary, userDictionary);
                         if (pyResult == IntPtr.Zero || PythonInterop.PyErr_Occurred() != IntPtr.Zero)
                         {
@@ -278,7 +278,7 @@ namespace EmbeddedPython.Internal
                             }
                         }
 
-                        var pyResult = PythonInterop.PyRun_String(code, PythonInterop.Py_file_input, _dictionary.NativePythonDictionary, userDictionary.NativePythonDictionary);
+                        var pyResult = PythonInterop.PyRun_String(code, PythonInterop.Py_file_input, _dictionary.NativePythonObject, userDictionary.NativePythonObject);
                         if (pyResult == IntPtr.Zero || PythonInterop.PyErr_Occurred() != IntPtr.Zero)
                         {
                             throw PythonInterop.PyErr_Fetch();
@@ -325,7 +325,7 @@ namespace EmbeddedPython.Internal
                             }
                         }
 
-                        var pyResult = PythonInterop.PyRun_String(code, PythonInterop.Py_file_input, _dictionary.NativePythonDictionary, userDictionary.NativePythonDictionary);
+                        var pyResult = PythonInterop.PyRun_String(code, PythonInterop.Py_file_input, _dictionary.NativePythonObject, userDictionary.NativePythonObject);
                         if (pyResult == IntPtr.Zero || PythonInterop.PyErr_Occurred() != IntPtr.Zero)
                         {
                             throw PythonInterop.PyErr_Fetch();

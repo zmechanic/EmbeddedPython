@@ -9,13 +9,6 @@ namespace EmbeddedPython
     public interface IPython : IDisposable
     {
         /// <summary>
-        /// Converts Python type of variable given by <paramref name="value"/> pointer to native  to CLR type.
-        /// </summary>
-        /// <param name="value">Pointer to native Python type.</param>
-        /// <returns>CLR type.</returns>
-        Type GetClrType(IntPtr value);
-
-        /// <summary>
         /// Gets main Python module.
         /// </summary>
         IPythonModule MainModule { get; }

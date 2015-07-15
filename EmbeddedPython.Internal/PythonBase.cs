@@ -4,11 +4,6 @@ namespace EmbeddedPython.Internal
 {
     public abstract class PythonBase : IPython
     {
-        public Type GetClrType(IntPtr value)
-        {
-            return PythonTypeConverter.GetClrType(value);
-        }
-
         public IPythonModule MainModule
         {
             get { return PythonConcrete.MainModule; }

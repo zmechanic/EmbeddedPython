@@ -22,8 +22,8 @@ namespace EmbeddedPython.Internal
             PythonInterop.PyEval_InitThreads();
 
             _mainModule = new PythonModule("__main__");
-            
-            var pyBuiltIn = PythonInterop.PyDict_GetItemString(((PythonDictionary)_mainModule.Dictionary).NativePythonDictionary, "__builtins__");
+
+            var pyBuiltIn = PythonInterop.PyDict_GetItemString(((PythonDictionary)_mainModule.Dictionary).NativePythonObject, "__builtins__");
 
             PythonInterop.Py_None = PythonInterop.PyObject_GetAttrString(pyBuiltIn, "None");
             PythonInterop.Py_True = PythonInterop.PyObject_GetAttrString(pyBuiltIn, "True");
@@ -36,7 +36,7 @@ namespace EmbeddedPython.Internal
             PythonInterop.PyType_None = PythonInterop.PyObject_Type(PythonInterop.Py_None);
             PythonInterop.PyType_Type = PythonInterop.PyObject_Type(PythonInterop.PyType_None);
 
-            var op = PythonInterop.PyObject_GetAttrString(((PythonDictionary)_mainModule.Dictionary).NativePythonDictionary, "keys");
+            var op = PythonInterop.PyObject_GetAttrString(((PythonDictionary)_mainModule.Dictionary).NativePythonObject, "keys");
             PythonInterop.PyType_Method = PythonInterop.PyObject_Type(op);
             PythonInterop.Py_DecRef(op);
 

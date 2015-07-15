@@ -46,9 +46,12 @@
     <Compile Include="PythonFactory.cs" />
     <Compile Include="PythonFunction.cs" />
     <Compile Include="PythonInterop.cs" />
+    <Compile Include="PythonList.cs" />
     <Compile Include="PythonModule.cs" />
     <Compile Include="PythonBase.cs" />
     <Compile Include="PythonDictionary.cs" />
+    <Compile Include="PythonObject.cs" />
+    <Compile Include="PythonTuple.cs" />
     <Compile Include="PythonTypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>

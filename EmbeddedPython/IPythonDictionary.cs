@@ -6,7 +6,7 @@ namespace EmbeddedPython
     /// <summary>
     /// Python dictionary.
     /// </summary>
-    public interface IPythonDictionary : IDisposable
+    public interface IPythonDictionary : IPythonObject
     {
         /// <summary>
         /// Gets or sets value of specified key.

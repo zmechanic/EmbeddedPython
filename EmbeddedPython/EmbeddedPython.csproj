@@ -47,8 +47,11 @@
   <ItemGroup>
     <Compile Include="IPython.cs" />
     <Compile Include="IPythonFunction.cs" />
+    <Compile Include="IPythonList.cs" />
     <Compile Include="IPythonModule.cs" />
     <Compile Include="IPythonDictionary.cs" />
+    <Compile Include="IPythonObject.cs" />
+    <Compile Include="IPythonTuple.cs" />
     <Compile Include="IPythonTypeFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PythonException.cs" />

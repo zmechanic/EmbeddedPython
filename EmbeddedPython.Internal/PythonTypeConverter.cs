@@ -22,6 +22,11 @@ namespace EmbeddedPython.Internal
                 return (IntPtr)value;
             }
 
+            if (t == typeof(PythonObject))
+            {
+                return ((PythonObject)value).NativePythonObject;
+            }
+
             if (t == typeof(bool))
             {
                 return (bool)value ? PythonInterop.Py_True : PythonInterop.Py_False;
@@ -111,11 +116,6 @@ namespace EmbeddedPython.Internal
             if (t == typeof(PythonUnicodeString))
             {
                 return PythonInterop.PyUnicode_FromString(value.ToString());
-            }
-
-            if (t == typeof(PythonDictionary))
-            {
-                return ((PythonDictionary)value).NativePythonDictionary;
             }
 
             if (t.IsGenericType)
@@ -370,8 +370,13 @@ namespace EmbeddedPython.Internal
                     genericType == typeof(IReadOnlyList<>) ||
                     genericType == typeof(IReadOnlyCollection<>))
                 {
-                    return PythonListToClrList(value, genericArgTypes[0]);
+                    return PythonListToClrArray(value, genericArgTypes[0]);
                 }
+            }
+
+            if (t == typeof(IEnumerable))
+            {
+                return PythonListToClrArray(value, typeof(object));
             }
 
             if (t.IsArray && t.GetArrayRank() == 1)
@@ -462,11 +467,15 @@ namespace EmbeddedPython.Internal
                 }
                 else if (pyType == PythonInterop.PyType_Tuple)
                 {
-                    return typeof(Tuple);
+                    return typeof(IPythonTuple);
                 }
                 else if (pyType == PythonInterop.PyType_Dict)
                 {
                     return typeof(IPythonDictionary);
+                }
+                else if (pyType == PythonInterop.PyType_List)
+                {
+                    return typeof(IPythonList);
                 }
 
                 throw new PythonException("Unsupported Python type.");
@@ -475,20 +484,6 @@ namespace EmbeddedPython.Internal
             {
                 PythonInterop.Py_DecRef(pyType);
             }
-        }
-
-        private static IList PythonListToClrList(IntPtr pyList, Type elementType)
-        {
-            var numberOfItems = PythonInterop.PyList_Size(pyList);
-
-            var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
-
-            for (var i = 0; i < numberOfItems; i++)
-            {
-                list.Add(ConvertToClrType(PythonInterop.PyList_GetItem(pyList, i), elementType));
-            }
-
-            return list;
         }
 
         private static Array PythonListToClrArray(IntPtr pyList, Type elementType)
