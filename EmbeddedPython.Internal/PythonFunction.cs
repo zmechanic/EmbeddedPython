@@ -2,12 +2,9 @@
 
 namespace EmbeddedPython.Internal
 {
-    public class PythonFunction : IPythonFunction
+    internal class PythonFunction : PythonObject, IPythonFunction
     {
-        private bool _disposed;
-        private readonly IntPtr _function;
-
-        internal PythonFunction(PythonModule module, string functionName)
+        internal PythonFunction(PythonObject pyObject, string functionName)
         {
             IntPtr function = IntPtr.Zero;
 
@@ -15,7 +12,7 @@ namespace EmbeddedPython.Internal
             {
                 PythonInterop.PyGILState_Invoke(() =>
                 {
-                    function = PythonInterop.PyObject_GetAttrString(module.NativePythonModule, functionName);
+                    function = PythonInterop.PyObject_GetAttrString(pyObject.NativePythonObject, functionName);
                     if (function == IntPtr.Zero || PythonInterop.PyErr_Occurred() != IntPtr.Zero)
                     {
                         throw PythonInterop.PyErr_Fetch();
@@ -26,34 +23,31 @@ namespace EmbeddedPython.Internal
                         throw new PythonException(string.Format("Function {0} is not callable", functionName));
                     }
 
-                    //PythonInterop.Py_IncRef(function);
+                    PythonInterop.Py_IncRef(NativePythonObject);
                 });
             }
             catch (Exception ex)
             {
-                throw new PythonException(string.Format("Encountered error \"{0}\" while getting function \"{1}\" from module \"{2}\".", ex.Message, functionName, module.FullName), ex);
-            }
-
-            _function = function;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
+                if (pyObject is IPythonModule)
                 {
-                    //PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_DecRef(_function));
+                    throw new PythonException(
+                        string.Format(
+                            "Encountered error \"{0}\" while getting function \"{1}\" from module \"{2}\".",
+                            ex.Message,
+                            functionName,
+                            ((IPythonModule)pyObject).FullName),
+                        ex);
                 }
 
-                _disposed = true;
+                throw new PythonException(
+                    string.Format(
+                        "Encountered error \"{0}\" while getting function \"{1}\".",
+                        ex.Message,
+                        functionName),
+                    ex);
             }
+
+            NativePythonObject = function;
         }
 
         public TResult Invoke<TResult>()
@@ -127,17 +121,17 @@ namespace EmbeddedPython.Internal
 
             PythonInterop.PyGILState_Invoke(() =>
             {
-            var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-            var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-            var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-            var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
                 var presult = Invoke(pyarg0, pyarg1, pyarg2, pyarg3);
-            result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-            PythonInterop.Py_DecRef(presult);
-            PythonInterop.Py_DecRef(pyarg0);
-            PythonInterop.Py_DecRef(pyarg1);
-            PythonInterop.Py_DecRef(pyarg2);
-            PythonInterop.Py_DecRef(pyarg3);
+                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                PythonInterop.Py_DecRef(presult);
+                PythonInterop.Py_DecRef(pyarg0);
+                PythonInterop.Py_DecRef(pyarg1);
+                PythonInterop.Py_DecRef(pyarg2);
+                PythonInterop.Py_DecRef(pyarg3);
             });
             return result;
         }
@@ -148,19 +142,19 @@ namespace EmbeddedPython.Internal
 
             PythonInterop.PyGILState_Invoke(() =>
             {
-            var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-            var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-            var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-            var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-            var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
+                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
                 var presult = Invoke(pyarg0, pyarg1, pyarg2, pyarg3, pyarg4);
-            result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-            PythonInterop.Py_DecRef(presult);
-            PythonInterop.Py_DecRef(pyarg0);
-            PythonInterop.Py_DecRef(pyarg1);
-            PythonInterop.Py_DecRef(pyarg2);
-            PythonInterop.Py_DecRef(pyarg3);
-            PythonInterop.Py_DecRef(pyarg4);
+                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                PythonInterop.Py_DecRef(presult);
+                PythonInterop.Py_DecRef(pyarg0);
+                PythonInterop.Py_DecRef(pyarg1);
+                PythonInterop.Py_DecRef(pyarg2);
+                PythonInterop.Py_DecRef(pyarg3);
+                PythonInterop.Py_DecRef(pyarg4);
             });
             return result;
         }
@@ -171,21 +165,21 @@ namespace EmbeddedPython.Internal
 
             PythonInterop.PyGILState_Invoke(() =>
             {
-            var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-            var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-            var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-            var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-            var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-            var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
+                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
+                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
                 var presult = Invoke(pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
-            result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-            PythonInterop.Py_DecRef(presult);
-            PythonInterop.Py_DecRef(pyarg0);
-            PythonInterop.Py_DecRef(pyarg1);
-            PythonInterop.Py_DecRef(pyarg2);
-            PythonInterop.Py_DecRef(pyarg3);
-            PythonInterop.Py_DecRef(pyarg4);
-            PythonInterop.Py_DecRef(pyarg5);
+                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                PythonInterop.Py_DecRef(presult);
+                PythonInterop.Py_DecRef(pyarg0);
+                PythonInterop.Py_DecRef(pyarg1);
+                PythonInterop.Py_DecRef(pyarg2);
+                PythonInterop.Py_DecRef(pyarg3);
+                PythonInterop.Py_DecRef(pyarg4);
+                PythonInterop.Py_DecRef(pyarg5);
             });
             return result;
         }
@@ -196,23 +190,23 @@ namespace EmbeddedPython.Internal
 
             PythonInterop.PyGILState_Invoke(() =>
             {
-            var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-            var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-            var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-            var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-            var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-            var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
-            var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg7);
+                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
+                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
+                var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg7);
                 var presult = Invoke(pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
-            result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-            PythonInterop.Py_DecRef(presult);
-            PythonInterop.Py_DecRef(pyarg0);
-            PythonInterop.Py_DecRef(pyarg1);
-            PythonInterop.Py_DecRef(pyarg2);
-            PythonInterop.Py_DecRef(pyarg3);
-            PythonInterop.Py_DecRef(pyarg4);
-            PythonInterop.Py_DecRef(pyarg5);
-            PythonInterop.Py_DecRef(pyarg6);
+                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                PythonInterop.Py_DecRef(presult);
+                PythonInterop.Py_DecRef(pyarg0);
+                PythonInterop.Py_DecRef(pyarg1);
+                PythonInterop.Py_DecRef(pyarg2);
+                PythonInterop.Py_DecRef(pyarg3);
+                PythonInterop.Py_DecRef(pyarg4);
+                PythonInterop.Py_DecRef(pyarg5);
+                PythonInterop.Py_DecRef(pyarg6);
             });
             return result;
         }
@@ -224,26 +218,39 @@ namespace EmbeddedPython.Internal
             PythonInterop.PyGILState_Invoke(() =>
             {
                 var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-            var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-            var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-            var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-            var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-            var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
-            var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg7);
-            var pyarg7 = PythonTypeConverter.ConvertToPythonType(arg8);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
+                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
+                var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg7);
+                var pyarg7 = PythonTypeConverter.ConvertToPythonType(arg8);
                 var presult = Invoke(pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
-            result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-            PythonInterop.Py_DecRef(presult);
-            PythonInterop.Py_DecRef(pyarg0);
-            PythonInterop.Py_DecRef(pyarg1);
-            PythonInterop.Py_DecRef(pyarg2);
-            PythonInterop.Py_DecRef(pyarg3);
-            PythonInterop.Py_DecRef(pyarg4);
-            PythonInterop.Py_DecRef(pyarg5);
-            PythonInterop.Py_DecRef(pyarg6);
-            PythonInterop.Py_DecRef(pyarg7);
+                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                PythonInterop.Py_DecRef(presult);
+                PythonInterop.Py_DecRef(pyarg0);
+                PythonInterop.Py_DecRef(pyarg1);
+                PythonInterop.Py_DecRef(pyarg2);
+                PythonInterop.Py_DecRef(pyarg3);
+                PythonInterop.Py_DecRef(pyarg4);
+                PythonInterop.Py_DecRef(pyarg5);
+                PythonInterop.Py_DecRef(pyarg6);
+                PythonInterop.Py_DecRef(pyarg7);
             });
             return result;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!IsDisposed)
+            {
+                if (disposing)
+                {
+                    PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_DecRef(NativePythonObject));
+                }
+
+                base.Dispose(disposing);
+            }
         }
 
         private IntPtr Invoke(params IntPtr[] args)
@@ -257,31 +264,31 @@ namespace EmbeddedPython.Internal
                     switch (args.Length)
                     {
                         case 0:
-                            result = PythonInterop.PyObject_CallFunctionObjArgs(_function, IntPtr.Zero);
+                            result = PythonInterop.PyObject_CallFunctionObjArgs(NativePythonObject, IntPtr.Zero);
                             break;
                         case 1:
-                            result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], IntPtr.Zero);
+                            result = PythonInterop.PyObject_CallFunctionObjArgs(NativePythonObject, args[0], IntPtr.Zero);
                             break;
                         case 2:
-                            result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], IntPtr.Zero);
+                            result = PythonInterop.PyObject_CallFunctionObjArgs(NativePythonObject, args[0], args[1], IntPtr.Zero);
                             break;
                         case 3:
-                            result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], IntPtr.Zero);
+                            result = PythonInterop.PyObject_CallFunctionObjArgs(NativePythonObject, args[0], args[1], args[2], IntPtr.Zero);
                             break;
                         case 4:
-                            result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], args[3], IntPtr.Zero);
+                            result = PythonInterop.PyObject_CallFunctionObjArgs(NativePythonObject, args[0], args[1], args[2], args[3], IntPtr.Zero);
                             break;
                         case 5:
-                            result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], args[3], args[4], IntPtr.Zero);
+                            result = PythonInterop.PyObject_CallFunctionObjArgs(NativePythonObject, args[0], args[1], args[2], args[3], args[4], IntPtr.Zero);
                             break;
                         case 6:
-                            result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], args[3], args[4], args[5], IntPtr.Zero);
+                            result = PythonInterop.PyObject_CallFunctionObjArgs(NativePythonObject, args[0], args[1], args[2], args[3], args[4], args[5], IntPtr.Zero);
                             break;
                         case 7:
-                            result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], args[3], args[4], args[5], args[6], IntPtr.Zero);
+                            result = PythonInterop.PyObject_CallFunctionObjArgs(NativePythonObject, args[0], args[1], args[2], args[3], args[4], args[5], args[6], IntPtr.Zero);
                             break;
                         case 8:
-                            result = PythonInterop.PyObject_CallFunctionObjArgs(_function, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], IntPtr.Zero);
+                            result = PythonInterop.PyObject_CallFunctionObjArgs(NativePythonObject, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], IntPtr.Zero);
                             break;
                         default:
                             throw new PythonException(string.Format("Not supported number of {0} arguments for CallFunction method.", args.Length));
@@ -295,7 +302,7 @@ namespace EmbeddedPython.Internal
             }
             catch (Exception ex)
             {
-                throw new PythonException(string.Format("Could not invoke function. Encountered Python error \"{0}\".", ex.Message), ex);
+                throw new PythonException(string.Format("Could not invoke Python function. Encountered Python error \"{0}\".", ex.Message), ex);
             }
 
             return result;

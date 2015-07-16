@@ -36,7 +36,7 @@ namespace EmbeddedPython.Internal
             {
                 PythonInterop.PyGILState_Invoke(() =>
                 {
-                    dictionary = PythonInterop.PyModule_GetDict(module.NativePythonModule);
+                    dictionary = PythonInterop.PyModule_GetDict(module.NativePythonObject);
                     if (dictionary == IntPtr.Zero)
                     {
                         throw PythonInterop.PyErr_Fetch();
@@ -47,18 +47,42 @@ namespace EmbeddedPython.Internal
             }
             catch (Exception ex)
             {
-                throw new PythonException(string.Format("Cannot create dictionary for module \"{0}\". Encountered Python error \"{1}\".", module.FullName, ex.Message), ex);
+                throw new PythonException(string.Format("Cannot create Python dictionary for module \"{0}\". Encountered Python error \"{1}\".", module.FullName, ex.Message), ex);
             }
 
             NativePythonObject = dictionary;
         }
 
-        internal PythonDictionary(IntPtr nativePythonObject) 
+        internal PythonDictionary(IntPtr nativePythonObject, bool incrementReference)
+            : base(nativePythonObject, incrementReference)
         {
-            NativePythonObject = nativePythonObject;
-            PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_IncRef(NativePythonObject));
         }
 
+        public int Size
+        {
+            get
+            {
+                var size = 0;
+
+                try
+                {
+                    PythonInterop.PyGILState_Invoke(() =>
+                    {
+                        size = PythonInterop.PyDict_Size(NativePythonObject);
+                        if (size == 0)
+                        {
+                            throw PythonInterop.PyErr_Fetch();
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    throw new PythonException(string.Format("Cannot get size of Python dictionary. Encountered Python error \"{0}\".", ex.Message), ex);
+                }
+
+                return size;
+            }
+        }
         public object this[string key]
         {
             get

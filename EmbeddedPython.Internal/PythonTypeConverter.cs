@@ -161,14 +161,19 @@ namespace EmbeddedPython.Internal
                 throw new PythonException("Value does not exist.");
             }
 
+            if (value == PythonInterop.Py_None)
+            {
+                return null;
+            }
+
             if (t == typeof(IntPtr))
             {
                 return value;
             }
 
-            if (value == PythonInterop.Py_None)
+            if (t == typeof(IPythonObject))
             {
-                return null;
+                return new PythonObject(value, true);
             }
 
             if (t == typeof(bool))
@@ -286,7 +291,17 @@ namespace EmbeddedPython.Internal
 
             if (t == typeof(IPythonDictionary))
             {
-                return new PythonDictionary(value);
+                return new PythonDictionary(value, true);
+            }
+
+            if (t == typeof(IPythonList))
+            {
+                return new PythonList(value, true);
+            }
+
+            if (t == typeof(IPythonTuple))
+            {
+                return new PythonTuple(value, true);
             }
 
             if (t == typeof(Tuple))
@@ -397,6 +412,12 @@ namespace EmbeddedPython.Internal
             var t = typeof(T);
 
             var obj = ConvertToClrType(value, t);
+
+            if (obj == null)
+            {
+                return default(T);
+            }
+
             if (obj is T)
             {
                 return (T)obj;
@@ -465,13 +486,13 @@ namespace EmbeddedPython.Internal
                 {
                     return typeof(double);
                 }
-                else if (pyType == PythonInterop.PyType_Tuple)
-                {
-                    return typeof(IPythonTuple);
-                }
                 else if (pyType == PythonInterop.PyType_Dict)
                 {
                     return typeof(IPythonDictionary);
+                }
+                else if (pyType == PythonInterop.PyType_Tuple)
+                {
+                    return typeof(IPythonTuple);
                 }
                 else if (pyType == PythonInterop.PyType_List)
                 {

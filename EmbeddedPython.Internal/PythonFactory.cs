@@ -12,9 +12,9 @@
             return new PythonTuple(size);
         }
 
-        public IPythonList CreateList()
+        public IPythonList CreateList(int size)
         {
-            return new PythonList();
+            return new PythonList(size);
         }
     }
 }

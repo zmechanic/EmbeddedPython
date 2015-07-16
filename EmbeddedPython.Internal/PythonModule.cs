@@ -4,14 +4,11 @@ using System.IO;
 
 namespace EmbeddedPython.Internal
 {
-    internal class PythonModule : IPythonModule
+    internal class PythonModule : PythonObject, IPythonModule
     {
-        private bool _disposed;
         private readonly string _modulePath;
         private readonly string _moduleName;
-        private readonly IntPtr _module;
         private readonly PythonDictionary _dictionary;
-        private readonly Dictionary<Tuple<string, int>, PythonFunction> _registeredFunctions = new Dictionary<Tuple<string, int>, PythonFunction>();
 
         internal PythonModule(string moduleName)
         {
@@ -38,7 +35,7 @@ namespace EmbeddedPython.Internal
                 throw new PythonException(string.Format("Cannot create module \"{0}\". Encountered Python error \"{1}\".", moduleName, ex.Message), ex);
             }
 
-            _module = module;
+            NativePythonObject = module;
             _dictionary = new PythonDictionary(this);
         }
 
@@ -86,16 +83,8 @@ namespace EmbeddedPython.Internal
                 throw new PythonException(string.Format("Encountered error \"{0}\" while attempting to load module \"{1}\" from path \"{2}\".", ex.Message, moduleName, modulePath), ex);
             }
 
-            _module = module;
+            NativePythonObject = module;
             _dictionary = new PythonDictionary(this);
-        }
-
-        internal IntPtr NativePythonModule
-        {
-            get
-            {
-                return _module;
-            }
         }
 
         public string FullName
@@ -114,92 +103,6 @@ namespace EmbeddedPython.Internal
         public IPythonDictionary Dictionary
         {
             get { return _dictionary; }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    foreach (var nameAndFunctionKeyValuePair in _registeredFunctions)
-                    {
-                        nameAndFunctionKeyValuePair.Value.Dispose();
-                    }
-
-                    _dictionary.Dispose();
-                    PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_DecRef(_module));
-                }
-
-                _disposed = true;
-            }
-        }
-
-        public IPythonFunction GetFunction(string functionName)
-        {
-            return new PythonFunction(this, functionName);
-        }
-
-        public Func<T, TResult> GetFunction<T, TResult>(string functionName)
-        {
-            var function = GetFunction(functionName, GetTypeHash(typeof(T), typeof(TResult)));
-
-            return function.Invoke<T, TResult>;
-        }
-
-        public Func<T1, T2, TResult> GetFunction<T1, T2, TResult>(string functionName)
-        {
-            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(TResult)));
-
-            return function.Invoke<T1, T2, TResult>;
-        }
-
-        public Func<T1, T2, T3, TResult> GetFunction<T1, T2, T3, TResult>(string functionName)
-        {
-            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(T3), typeof(TResult)));
-
-            return function.Invoke<T1, T2, T3, TResult>;
-        }
-
-        public Func<T1, T2, T3, T4, TResult> GetFunction<T1, T2, T3, T4, TResult>(string functionName)
-        {
-            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(TResult)));
-
-            return function.Invoke<T1, T2, T3, T4, TResult>;
-        }
-
-        public Func<T1, T2, T3, T4, T5, TResult> GetFunction<T1, T2, T3, T4, T5, TResult>(string functionName)
-        {
-            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(TResult)));
-
-            return function.Invoke<T1, T2, T3, T4, T5, TResult>;
-        }
-
-        public Func<T1, T2, T3, T4, T5, T6, TResult> GetFunction<T1, T2, T3, T4, T5, T6, TResult>(string functionName)
-        {
-            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(TResult)));
-
-            return function.Invoke<T1, T2, T3, T4, T5, T6, TResult>;
-        }
-
-        public Func<T1, T2, T3, T4, T5, T6, T7, TResult> GetFunction<T1, T2, T3, T4, T5, T6, T7, TResult>(string functionName)
-        {
-            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(TResult)));
-
-            return function.Invoke<T1, T2, T3, T4, T5, T6, T7, TResult>;
-        }
-
-        public Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> GetFunction<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(string functionName)
-        {
-            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(T8), typeof(TResult)));
-
-            return function.Invoke<T1, T2, T3, T4, T5, T6, T7, T8, TResult>;
         }
 
         public void Execute(string code)
@@ -362,34 +265,19 @@ namespace EmbeddedPython.Internal
         {
             return Execute(code, null, resultVariables);
         }
-        
-        private PythonFunction GetFunction(string functionName, int typeHash)
+
+        protected override void Dispose(bool disposing)
         {
-            PythonFunction function;
-            var functionHash = Tuple.Create(functionName, typeHash);
-
-            if (_registeredFunctions.TryGetValue(functionHash, out function))
+            if (!IsDisposed)
             {
-                return function;
+                if (disposing)
+                {
+                    _dictionary.Dispose();
+                    PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_DecRef(NativePythonObject));
+                }
+
+                base.Dispose(disposing);
             }
-
-            function = new PythonFunction(this, functionName);
-
-            _registeredFunctions.Add(functionHash, function);
-
-            return function;
-        }
-
-        private int GetTypeHash(params Type[] types)
-        {
-            var hash = 23;
-
-            foreach (var type in types)
-            {
-                hash = (hash * 31) + type.GetHashCode();
-            }
-
-            return hash;
         }
     }
 }

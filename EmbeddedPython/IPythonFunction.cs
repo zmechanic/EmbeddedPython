@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace EmbeddedPython
+﻿namespace EmbeddedPython
 {
     /// <summary>
     /// Python function.
     /// </summary>
-    public interface IPythonFunction : IDisposable
+    public interface IPythonFunction : IPythonObject
     {
         /// <summary>
         /// Invokes function with no arguments and returns result of function invocation converted to type <typeparamref name="TResult"/>.

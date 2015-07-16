@@ -16,6 +16,18 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
+        public void Size_Property_ReturnsCorrectValue()
+        {
+            using (var testTarget = Python.Factory.CreateDictionary())
+            {
+                testTarget["testKey"] = 1;
+                testTarget["someOtherKey"] = 2;
+
+                Assert.AreEqual(2, testTarget.Size);
+            }
+        }
+
+        [TestMethod]
         public void Indexer_Set_Succeeds()
         {
             using (var testTarget = Python.Factory.CreateDictionary())
@@ -72,7 +84,7 @@ namespace EmbeddedPython.UnitTests
             {
                 testTarget.Set("testKey", value);
 
-                var result = testTarget.Get("testKey", typeof (int));
+                var result = testTarget.Get("testKey", typeof(int));
 
                 Assert.AreEqual(value, result);
             }
@@ -134,7 +146,7 @@ namespace EmbeddedPython.UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(PythonException))]
-        public void Get_GenericTypeInvalidKeyValue_ThrowsException()
+        public void Get_GenericTypeInvalidKey_ThrowsException()
         {
             using (var testTarget = Python.Factory.CreateDictionary())
             {
@@ -144,11 +156,11 @@ namespace EmbeddedPython.UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(PythonException))]
-        public void Get_ExplicitTypeInvalidKeyValue_ThrowsException()
+        public void Get_ExplicitTypeInvalidKey_ThrowsException()
         {
             using (var testTarget = Python.Factory.CreateDictionary())
             {
-                testTarget.Get("noKey", typeof (int));
+                testTarget.Get("noKey", typeof(int));
             }
         }
     }

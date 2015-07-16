@@ -27,10 +27,9 @@ namespace EmbeddedPython.Internal
             NativePythonObject = dictionary;
         }
 
-        public PythonTuple(IntPtr nativePythonObject) : base(nativePythonObject)
+        internal PythonTuple(IntPtr nativePythonObject, bool incrementReference)
+            : base(nativePythonObject, incrementReference)
         {
-            NativePythonObject = nativePythonObject;
-            PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_IncRef(NativePythonObject));
         }
 
         public object this[int position]
@@ -64,7 +63,7 @@ namespace EmbeddedPython.Internal
                 }
                 catch (Exception ex)
                 {
-                    throw new PythonException(string.Format("Cannot get size of tuple. Encountered Python error \"{0}\".", ex.Message), ex);
+                    throw new PythonException(string.Format("Cannot get size of Python tuple. Encountered Python error \"{0}\".", ex.Message), ex);
                 }
 
                 return size;

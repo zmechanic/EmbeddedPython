@@ -24,7 +24,7 @@ namespace EmbeddedPython
         /// </summary>
         /// <typeparam key="T">Type of value.</typeparam>
         /// <param name="position">Position of item in the tuple.</param>
-        /// <param key="value">Value of tuple item to be added.</param>
+        /// <param key="value">Value of tuple item to be set.</param>
         void Set<T>(int position, T value);
 
         /// <summary>

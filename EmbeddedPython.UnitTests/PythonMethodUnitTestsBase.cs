@@ -3,9 +3,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EmbeddedPython.UnitTests
 {
-    public class PythonFunctionUnitTestsBase : PythonVersionSpecificUnitTestBase
+    public class PythonMethodUnitTestsBase : PythonVersionSpecificUnitTestBase
     {
-        private const string ModulePath = "Python/FunctionInvokeTest";
+        private const string ModulePath = "Python/MethodInvokeTest";
         private const string ModuleMain = "Main";
 
         private IPythonModule _module;
@@ -28,115 +28,115 @@ namespace EmbeddedPython.UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(PythonException))]
-        public void Invoke_IncorrectNumberOfArgs_ThrowsException()
+        public void CallMethod_IncorrectNumberOfArgs_ThrowsException()
         {
-            using (var testTarget = _module.GetFunction("func1"))
+            using (var testTarget = _module.Execute<IPythonObject>("c=MyClass()", "c"))
             {
-                testTarget.Invoke<string, string, string>("a", "b");
+                testTarget.CallMethod<string, string, string>("method1", "a", "b");
             }
         }
 
         [TestMethod]
-        public void Invoke_0Arg_ReturnsCorrectName()
+        public void CallMethod_0Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func0"))
+            using (var testTarget = _module.Execute<IPythonObject>("c=MyClass()", "c"))
             {
-                var result = testTarget.Invoke<string>();
+                var result = testTarget.CallMethod<string>("method0");
 
                 Assert.AreEqual("TaDa", result);
             }
         }
 
         [TestMethod]
-        public void Invoke_1Arg_ReturnsCorrectName()
+        public void CallMethod_1Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func1"))
+            using (var testTarget = _module.Execute<IPythonObject>("c=MyClass()", "c"))
             {
-                var result = testTarget.Invoke<string, string>("a");
+                var result = testTarget.CallMethod<string, string>("method1", "a");
 
                 Assert.AreEqual("a", result);
             }
         }
 
         [TestMethod]
-        public void Invoke_2Arg_ReturnsCorrectName()
+        public void CallMethod_2Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func2"))
+            using (var testTarget = _module.Execute<IPythonObject>("c=MyClass()", "c"))
             {
-                var result = testTarget.Invoke<string, string, string>("a", "b");
+                var result = testTarget.CallMethod<string, string, string>("method2", "a", "b");
 
                 Assert.AreEqual("ab", result);
             }
         }
 
         [TestMethod]
-        public void Invoke_3Arg_ReturnsCorrectName()
+        public void CallMethod_3Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func3"))
+            using (var testTarget = _module.Execute<IPythonObject>("c=MyClass()", "c"))
             {
-                var result = testTarget.Invoke<string, string, string, string>("a", "b", "c");
+                var result = testTarget.CallMethod<string, string, string, string>("method3", "a", "b", "c");
 
                 Assert.AreEqual("abc", result);
             }
         }
 
         [TestMethod]
-        public void Invoke_4Arg_ReturnsCorrectName()
+        public void CallMethod_4Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func4"))
+            using (var testTarget = _module.Execute<IPythonObject>("c=MyClass()", "c"))
             {
-                var result = testTarget.Invoke<string, string, string, string, string>("a", "b", "c", "d");
+                var result = testTarget.CallMethod<string, string, string, string, string>("method4", "a", "b", "c", "d");
 
                 Assert.AreEqual("abcd", result);
             }
         }
 
         [TestMethod]
-        public void Invoke_5Arg_ReturnsCorrectName()
+        public void CallMethod_5Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func5"))
+            using (var testTarget = _module.Execute<IPythonObject>("c=MyClass()", "c"))
             {
-                var result = testTarget.Invoke<string, string, string, string, string, string>("a", "b", "c", "d", "e");
+                var result = testTarget.CallMethod<string, string, string, string, string, string>("method5", "a", "b", "c", "d", "e");
 
                 Assert.AreEqual("abcde", result);
             }
         }
 
         [TestMethod]
-        public void Invoke_6Arg_ReturnsCorrectName()
+        public void CallMethod_6Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func6"))
+            using (var testTarget = _module.Execute<IPythonObject>("c=MyClass()", "c"))
             {
-                var result = testTarget.Invoke<string, string, string, string, string, string, string>("a", "b", "c", "d", "e", "f");
+                var result = testTarget.CallMethod<string, string, string, string, string, string, string>("method6", "a", "b", "c", "d", "e", "f");
 
                 Assert.AreEqual("abcdef", result);
             }
         }
 
         [TestMethod]
-        public void Invoke_7Arg_ReturnsCorrectName()
+        public void CallMethod_7Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func7"))
+            using (var testTarget = _module.Execute<IPythonObject>("c=MyClass()", "c"))
             {
-                var result = testTarget.Invoke<string, string, string, string, string, string, string, string>("a", "b", "c", "d", "e", "f", "g");
+                var result = testTarget.CallMethod<string, string, string, string, string, string, string, string>("method7", "a", "b", "c", "d", "e", "f", "g");
 
                 Assert.AreEqual("abcdefg", result);
             }
         }
 
         [TestMethod]
-        public void Invoke_8Arg_ReturnsCorrectName()
+        public void CallMethod_8Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func8"))
+            using (var testTarget = _module.Execute<IPythonObject>("c=MyClass()", "c"))
             {
-                var result = testTarget.Invoke<string, string, string, string, string, string, string, string, string>("a", "b", "c", "d", "e", "f", "g", "h");
+                var result = testTarget.CallMethod<string, string, string, string, string, string, string, string, string>("method8", "a", "b", "c", "d", "e", "f", "g", "h");
 
                 Assert.AreEqual("abcdefgh", result);
             }
         }
 
         [TestMethod]
-        public void Invoke_WithDispose_StressTest()
+        public void CallMethod_WithDispose_StressTest()
         {
             var random = new Random(555);
 
@@ -151,10 +151,11 @@ namespace EmbeddedPython.UnitTests
                 var v7 = ((char)random.Next(32, 127)).ToString();
                 var v8 = ((char)random.Next(32, 127)).ToString();
 
-                using (var testTarget = _module.GetFunction("func8"))
+                using (var testTarget = _module.Execute<IPythonObject>("c=MyClass()", "c"))
                 {
                     var result =
-                        testTarget.Invoke<string, string, string, string, string, string, string, string, string>(
+                        testTarget.CallMethod<string, string, string, string, string, string, string, string, string>(
+                            "method8",
                             v1,
                             v2,
                             v3,
@@ -170,11 +171,11 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
-        public void Invoke_WithoutDispose_StressTest()
+        public void CallMethod_WithoutDispose_StressTest()
         {
             var random = new Random(555);
 
-            using (var testTarget = _module.GetFunction("func8"))
+            using (var testTarget = _module.Execute<IPythonObject>("c=MyClass()", "c"))
             {
                 for (var i = 0; i < 10000; i++)
                 {
@@ -188,7 +189,8 @@ namespace EmbeddedPython.UnitTests
                     var v8 = ((char)random.Next(32, 127)).ToString();
 
                     var result =
-                        testTarget.Invoke<string, string, string, string, string, string, string, string, string>(
+                        testTarget.CallMethod<string, string, string, string, string, string, string, string, string>(
+                            "method8",
                             v1,
                             v2,
                             v3,

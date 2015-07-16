@@ -21,7 +21,8 @@
         /// <summary>
         /// Creates Python list.
         /// </summary>
+        /// <param name="size">Number of elements in the list.</param>
         /// <returns>Newly created Python list.</returns>
-        IPythonList CreateList();
+        IPythonList CreateList(int size);
     }
 }
