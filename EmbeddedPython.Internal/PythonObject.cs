@@ -342,6 +342,18 @@ namespace EmbeddedPython.Internal
             }
         }
 
+        public override int GetHashCode()
+        {
+            int hash = -1;
+
+            PythonInterop.PyGILState_Invoke(() =>
+            {
+                hash = (int)PythonInterop.PyObject_Hash(NativePythonObject);
+            });
+
+            return (hash == -1) ? base.GetHashCode() : hash;
+        }
+
         private IPythonFunction GetFunction(string functionName, int typeHash)
         {
             IPythonFunction function;

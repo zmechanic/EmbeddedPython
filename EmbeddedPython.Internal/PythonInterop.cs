@@ -451,7 +451,7 @@ namespace EmbeddedPython.Internal
         PyObject_Size(IntPtr pointer);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
-        internal static unsafe extern IntPtr
+        internal static unsafe extern long
         PyObject_Hash(IntPtr op);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
