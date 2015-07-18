@@ -10,6 +10,11 @@
         Type ClrType { get; }
 
         /// <summary>
+        /// Gets hash of Python object.
+        /// </summary>
+        long Hash { get; }
+
+        /// <summary>
         /// Gets Python function wrapper.
         /// </summary>
         /// <param name="functionName">Name of the Python function to get CLR invoke function for.</param>

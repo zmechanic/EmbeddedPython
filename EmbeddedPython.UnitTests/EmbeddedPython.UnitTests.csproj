@@ -71,6 +71,7 @@
     <Compile Include="PassThroughUnitTestsBase.cs" />
     <Compile Include="PythonMethodUnitTestsBase.cs" />
     <Compile Include="PythonListUnitTestsBase.cs" />
+    <Compile Include="PythonObjectUnitTestsBase.cs" />
     <Compile Include="PythonTupleUnitTestsBase.cs" />
     <Compile Include="PythonDictionaryUnitTestsBase.cs" />
     <Compile Include="PythonFunctionUnitTestsBase.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="V2PythonDictionaryUnitTests.cs" />
     <Compile Include="V3PythonMethodUnitTests.cs" />
     <Compile Include="V3PythonListUnitTests.cs" />
+    <Compile Include="V2PythonObjectUnitTests.cs" />
     <Compile Include="V3PythonTuplUnitTests.cs" />
     <Compile Include="V3PythonDictionaryUnitTests.cs" />
     <Compile Include="PythonModuleUnitTestsBase.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="V2PythonFunctionUnitTests.cs" />
     <Compile Include="V3PythonModuleUnitTests.cs" />
     <Compile Include="V3PythonFunctionUnitTests.cs" />
+    <Compile Include="V3PythonObjectUnitTests.cs" />
     <Compile Include="V3PythonUnitTests.cs" />
     <Compile Include="V3PassThroughUnitTests.cs" />
     <Compile Include="V2PassThroughUnitTests.cs" />
@@ -110,14 +113,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Python\ObjectTest\Main.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="EmbeddedPython.UnitTests.runsettings" />
     <Content Include="Python\MethodInvokeTest\Main.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Python\FunctionInvokeTest\Main.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Python\PassThrough\Main.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

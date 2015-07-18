@@ -6,7 +6,7 @@ namespace EmbeddedPython.UnitTests
 {
     public abstract class PythonModuleUnitTestsBase : PythonVersionSpecificUnitTestBase
     {
-        private const string ModulePath = "Python/PassThrough";
+        private const string ModulePath = "Python/ObjectTest";
         private const string ModuleMain = "Main";
 
         [TestMethod]

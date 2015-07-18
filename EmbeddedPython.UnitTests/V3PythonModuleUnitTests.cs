@@ -3,7 +3,7 @@
 namespace EmbeddedPython.UnitTests
 {
     [TestClass]
-    [DeploymentItem(@"Python\PassThrough\Main.py")]
+    [DeploymentItem(@"Python\ObjectTest\Main.py")]
     public class V3PythonModuleUnitTests : PythonModuleUnitTestsBase
     {
     }

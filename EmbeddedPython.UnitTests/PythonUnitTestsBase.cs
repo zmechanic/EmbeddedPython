@@ -14,7 +14,7 @@ namespace EmbeddedPython.UnitTests
         [TestMethod]
         public void ImportModule_ByFileName_LoadsModule()
         {
-            Python.ImportModule("Python/PassThrough", "Main");
+            Python.ImportModule("Python/ObjectTest", "Main");
         }
 
         [TestMethod]
@@ -22,7 +22,7 @@ namespace EmbeddedPython.UnitTests
         {
             for (var i = 0; i < 10000; i++)
             {
-                var testTarget = Python.ImportModule("Python/PassThrough", "Main");
+                var testTarget = Python.ImportModule("Python/ObjectTest", "Main");
                 testTarget.Dispose();
             }
         }

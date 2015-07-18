@@ -4,7 +4,7 @@ namespace EmbeddedPython.UnitTests
 {
     [TestClass]
     [DeploymentItem(@"Python\ObjectTest\Main.py")]
-    public class V2PythonModuleUnitTests : PythonModuleUnitTestsBase
+    public class V2PythonObjectUnitTests : PythonObjectUnitTestsBase
     {
     }
 }

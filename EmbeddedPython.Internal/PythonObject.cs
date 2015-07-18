@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EmbeddedPython.Internal
 {
@@ -11,13 +12,13 @@ namespace EmbeddedPython.Internal
 
         private Dictionary<Tuple<string, int>, IPythonFunction> _registeredFunctions;
 
-        public PythonObject()
+        internal PythonObject()
         {
         }
 
-        public PythonObject(IntPtr nativePythonObject, bool incrementReference)
+        internal PythonObject(IntPtr nativePythonObject, bool incrementReference)
         {
-            _nativePythonObject = nativePythonObject;
+            NativePythonObject = nativePythonObject;
 
             if (incrementReference)
             {
@@ -56,6 +57,21 @@ namespace EmbeddedPython.Internal
             get
             {
                 return _disposed;
+            }
+        }
+
+        public long Hash
+        {
+            get
+            {
+                long hash = -1;
+
+                PythonInterop.PyGILState_Invoke(() =>
+                {
+                    hash = (int)PythonInterop.PyObject_Hash(NativePythonObject);
+                });
+
+                return hash;
             }
         }
 
@@ -340,18 +356,6 @@ namespace EmbeddedPython.Internal
                     _disposed = true;
                 }
             }
-        }
-
-        public override int GetHashCode()
-        {
-            int hash = -1;
-
-            PythonInterop.PyGILState_Invoke(() =>
-            {
-                hash = (int)PythonInterop.PyObject_Hash(NativePythonObject);
-            });
-
-            return (hash == -1) ? base.GetHashCode() : hash;
         }
 
         private IPythonFunction GetFunction(string functionName, int typeHash)
