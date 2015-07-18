@@ -17,5 +17,16 @@ namespace EmbeddedPython.UnitTests
 
             Assert.AreNotEqual(-1, hash);
         }
+
+        [TestMethod]
+        public void ToString_NoParameters_Succeeds()
+        {
+            var module = Python.ImportModule(ModulePath, ModuleMain);
+            var testTarget = module.Execute<IPythonObject>("o = MyClass()", "o");
+
+            var str = testTarget.ToString();
+
+            Assert.IsFalse(string.IsNullOrEmpty(str));
+        }
     }
 }

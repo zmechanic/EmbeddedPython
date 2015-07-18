@@ -22,7 +22,7 @@ namespace EmbeddedPython.Tests
             var py3_m2 = python3.ImportModule("Module2", "Main");
 
             var o = py3_m1.Execute<IPythonObject>("b=MyClass()", "b");
-            var h = o.GetHashCode();
+            var s = o.ToString();
             var rrr = o.CallMethod<object>("doSomething");
 
             var py3_func = py3_m2.GetFunction<int, string>("bbb");

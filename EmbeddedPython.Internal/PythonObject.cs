@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace EmbeddedPython.Internal
 {
@@ -68,7 +67,7 @@ namespace EmbeddedPython.Internal
 
                 PythonInterop.PyGILState_Invoke(() =>
                 {
-                    hash = (int)PythonInterop.PyObject_Hash(NativePythonObject);
+                    hash = PythonInterop.PyObject_Hash(NativePythonObject);
                 });
 
                 return hash;
@@ -198,7 +197,7 @@ namespace EmbeddedPython.Internal
                 var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
                 var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
                 var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var presult = this.CallMethod(methodName, pyarg0, pyarg1, pyarg2);
+                var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2);
                 result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
                 PythonInterop.Py_DecRef(presult);
                 PythonInterop.Py_DecRef(pyarg0);
@@ -218,7 +217,7 @@ namespace EmbeddedPython.Internal
                 var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
                 var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
                 var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-                var presult = this.CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3);
+                var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3);
                 result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
                 PythonInterop.Py_DecRef(presult);
                 PythonInterop.Py_DecRef(pyarg0);
@@ -240,7 +239,7 @@ namespace EmbeddedPython.Internal
                 var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
                 var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
                 var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-                var presult = this.CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4);
+                var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4);
                 result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
                 PythonInterop.Py_DecRef(presult);
                 PythonInterop.Py_DecRef(pyarg0);
@@ -264,7 +263,7 @@ namespace EmbeddedPython.Internal
                 var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
                 var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
                 var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
-                var presult = this.CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
+                var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
                 result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
                 PythonInterop.Py_DecRef(presult);
                 PythonInterop.Py_DecRef(pyarg0);
@@ -290,7 +289,7 @@ namespace EmbeddedPython.Internal
                 var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
                 var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
                 var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg7);
-                var presult = this.CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
+                var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
                 result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
                 PythonInterop.Py_DecRef(presult);
                 PythonInterop.Py_DecRef(pyarg0);
@@ -318,7 +317,7 @@ namespace EmbeddedPython.Internal
                 var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
                 var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg7);
                 var pyarg7 = PythonTypeConverter.ConvertToPythonType(arg8);
-                var presult = this.CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
+                var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
                 result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
                 PythonInterop.Py_DecRef(presult);
                 PythonInterop.Py_DecRef(pyarg0);
@@ -337,6 +336,20 @@ namespace EmbeddedPython.Internal
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public override string ToString()
+        {
+            string str = null;
+
+            PythonInterop.PyGILState_Invoke(() =>
+            {
+                var pyStr = PythonInterop.PyObject_Str(NativePythonObject);
+                str = PythonInterop.PyString_ToString(pyStr);
+                PythonInterop.Py_DecRef(pyStr);
+            });
+
+            return str;
         }
 
         protected virtual void Dispose(bool disposing)
@@ -387,6 +400,7 @@ namespace EmbeddedPython.Internal
         {
             var hash = 23;
 
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var type in types)
             {
                 hash = (hash * 31) + type.GetHashCode();
