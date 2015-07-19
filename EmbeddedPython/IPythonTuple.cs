@@ -15,11 +15,6 @@ namespace EmbeddedPython
         object this[int position] { get; set; }
 
         /// <summary>
-        /// Gets size of the tuple.
-        /// </summary>
-        int Size { get; }
-
-        /// <summary>
         /// Sets item in the tuple.
         /// </summary>
         /// <typeparam key="T">Type of value.</typeparam>

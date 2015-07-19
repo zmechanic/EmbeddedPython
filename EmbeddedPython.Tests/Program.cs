@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 
 namespace EmbeddedPython.Tests
 {
@@ -17,20 +17,14 @@ namespace EmbeddedPython.Tests
 
             //var tuple = python3.MainModule.Execute<Tuple<int, int>>("b=(1,2)\n", "b");
 
-            var py3_ms = python3.ImportModule("Common", "Satellite");
             var py3_m1 = python3.ImportModule("Module1", "Main");
-            var py3_m2 = python3.ImportModule("Module2", "Main");
 
             var o = py3_m1.Execute<IPythonObject>("b=MyClass()", "b");
-            var s = o.ToString();
-            var rrr = o.CallMethod<object>("doSomething");
-
-            var py3_func = py3_m2.GetFunction<int, string>("bbb");
-            var py3_func_result = py3_func(10);
-
-            python3.Dispose();
+            var rrr = o.CallMethod<IPythonObject>("doSomething");
 
             Console.ReadLine();
+
+            python3.Dispose();
         }
     }
 }

@@ -15,11 +15,6 @@
         object this[int index] { get; set; }
 
         /// <summary>
-        /// Gets size of the list.
-        /// </summary>
-        int Size { get; }
-
-        /// <summary>
         /// Sets item in the list.
         /// </summary>
         /// <typeparam key="T">Type of value.</typeparam>

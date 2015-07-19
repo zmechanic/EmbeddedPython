@@ -21,7 +21,6 @@ namespace EmbeddedPython.Internal
                 PythonInterop.PyGILState_Invoke(() =>
                 {
                     module = PythonInterop.PyImport_AddModule(moduleName);
-
                     if (module == IntPtr.Zero)
                     {
                         throw PythonInterop.PyErr_Fetch();

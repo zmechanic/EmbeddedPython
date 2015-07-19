@@ -44,7 +44,7 @@ namespace EmbeddedPython.Internal
             }
         }
 
-        public int Size
+        public override int Size
         {
             get
             {
@@ -55,7 +55,7 @@ namespace EmbeddedPython.Internal
                     PythonInterop.PyGILState_Invoke(() =>
                     {
                         size = PythonInterop.PyTuple_Size(NativePythonObject);
-                        if (size == 0)
+                        if (size < 0)
                         {
                             throw PythonInterop.PyErr_Fetch();
                         }

@@ -1,4 +1,6 @@
-﻿namespace EmbeddedPython
+﻿using System.Collections.Generic;
+
+namespace EmbeddedPython
 {
     using System;
 
@@ -13,6 +15,24 @@
         /// Gets hash of Python object.
         /// </summary>
         long Hash { get; }
+
+        /// <summary>
+        /// Gets size of Python object.
+        /// </summary>
+        int Size { get; }
+
+        /// <summary>
+        /// Gets list of descriptors for Python object.
+        /// </summary>
+        IEnumerable<string> Dir { get; }
+
+        /// <summary>
+        /// Gets Python obect's attribute value.
+        /// </summary>
+        /// <typeparam name="T">Value type.</typeparam>
+        /// <param name="attributeName">Name of attribute.</param>
+        /// <returns>Value of attribute.</returns>
+        T GetAttr<T>(string attributeName);
 
         /// <summary>
         /// Gets Python function wrapper.

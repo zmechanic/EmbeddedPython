@@ -34,6 +34,11 @@ namespace EmbeddedPython.Internal
         internal static IntPtr PyType_None;
         internal static IntPtr PyType_Type;
 
+        internal static IntPtr PyType_BaseException;
+        internal static IntPtr PyType_SyntaxError;
+        internal static IntPtr PyType_IndentationError;
+        internal static IntPtr PyType_TabError;
+
         internal const int Py_single_input = 256;
         internal const int Py_file_input = 257;
         internal const int Py_eval_input = 258;
@@ -449,6 +454,10 @@ namespace EmbeddedPython.Internal
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern int
         PyObject_Size(IntPtr pointer);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern int
+        PyObject_Length(IntPtr pointer);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern long
@@ -1091,7 +1100,7 @@ namespace EmbeddedPython.Internal
 
         public static IntPtr PyUnicode_FromString(string value)
         {
-#if PY_UCS2
+#if PY_UCS2 || PY_UCSNONE
             var pythonString = PyUnicode_FromByteArray(System.Text.Encoding.Unicode.GetBytes(value), value.Length);
 #elif PY_UCS4
             var pythonString = PyUnicode_FromByteArray(System.Text.Encoding.UTF32.GetBytes(value), value.Length);
@@ -1117,7 +1126,7 @@ namespace EmbeddedPython.Internal
                     throw PyErr_Fetch();
                 }
 
-#if PY_UCS2
+#if PY_UCS2 || PY_UCSNONE
                 for (int i = 0; i < 0xffff; i += 2)
                 {
                     var b0 = *pyPointer++;
@@ -1154,7 +1163,7 @@ namespace EmbeddedPython.Internal
 #endif
             }
 
-#if PY_UCS2
+#if PY_UCS2 || PY_UCSNONE
             return System.Text.Encoding.Unicode.GetString(bytes, 0, count);
 #elif PY_UCS4
             return System.Text.Encoding.UTF32.GetString(bytes, 0, count);
@@ -1171,28 +1180,7 @@ namespace EmbeddedPython.Internal
 
             if (type != IntPtr.Zero)
             {
-                var exceptionType = PythonTypeConverter.GetClrType(value);
-
-                if (exceptionType == typeof(string))
-                {
-                    var s = PyString_ToString(value);
-                    return new PythonException(s);
-                }
-
-                if (exceptionType == typeof(Tuple))
-                {
-                    var exceptionTuples =
-                        PythonTypeConverter.ConvertToClrType<Tuple<string, Tuple<string, int, int, string>>>(value);
-                    if (exceptionTuples != null)
-                    {
-                        return new PythonException(
-                            exceptionTuples.Item1,
-                            exceptionTuples.Item2.Item1,
-                            exceptionTuples.Item2.Item2,
-                            exceptionTuples.Item2.Item3,
-                            exceptionTuples.Item2.Item4);
-                    }
-                }
+                return (PythonException)PythonTypeConverter.ConvertToClrType<object>(value);
             }
 
             return null;

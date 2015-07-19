@@ -16,11 +16,6 @@ namespace EmbeddedPython
         object this[string key] { get; set; }
 
         /// <summary>
-        /// Gets size of the dictionary.
-        /// </summary>
-        int Size { get; }
-
-        /// <summary>
         /// Gets list of keys in the dictionary.
         /// </summary>
         IEnumerable<string> Keys { get; }

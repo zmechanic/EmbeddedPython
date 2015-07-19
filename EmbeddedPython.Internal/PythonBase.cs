@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EmbeddedPython.Internal
+﻿namespace EmbeddedPython.Internal
 {
     public abstract class PythonBase : IPython
     {

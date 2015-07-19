@@ -25,14 +25,6 @@ namespace EmbeddedPython.Internal
             }
         }
 
-        public Type ClrType
-        {
-            get
-            {
-                return PythonTypeConverter.GetClrType(_nativePythonObject);
-            }
-        }
-
         internal IntPtr NativePythonObject
         {
             get
@@ -48,6 +40,70 @@ namespace EmbeddedPython.Internal
                 }
 
                 _nativePythonObject = value;
+            }
+        }
+
+        public Type ClrType
+        {
+            get
+            {
+                return PythonTypeConverter.GetClrType(_nativePythonObject);
+            }
+        }
+
+        public virtual int Size
+        {
+            get
+            {
+                var size = 0;
+
+                try
+                {
+                    PythonInterop.PyGILState_Invoke(() =>
+                    {
+                        size = PythonInterop.PyObject_Size(NativePythonObject);
+                        if (size < 0)
+                        {
+                            throw PythonInterop.PyErr_Fetch();
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    throw new PythonException(string.Format("Cannot get size of Python object. Encountered Python error \"{0}\".", ex.Message), ex);
+                }
+
+                return size;
+            }
+        }
+
+        public IEnumerable<string> Dir
+        {
+            get
+            {
+                IEnumerable<string> result = null;
+
+                try
+                {
+                    PythonInterop.PyGILState_Invoke(() =>
+                    {
+                        var pyList = PythonInterop.PyObject_Dir(NativePythonObject);
+                        if (pyList == IntPtr.Zero)
+                        {
+                            throw PythonInterop.PyErr_Fetch();
+                        }
+
+                        result = PythonTypeConverter.ConvertToClrType<IEnumerable<string>>(pyList);
+
+                        PythonInterop.Py_DecRef(pyList);
+                    });
+                }
+                catch (Exception ex)
+                {
+                    throw new PythonException(string.Format("Cannot get size of Python object. Encountered Python error \"{0}\".", ex.Message), ex);
+                }
+
+                return result;
             }
         }
 
@@ -72,6 +128,24 @@ namespace EmbeddedPython.Internal
 
                 return hash;
             }
+        }
+
+        public T GetAttr<T>(string attributeName)
+        {
+            var result = default(T);
+
+            PythonInterop.PyGILState_Invoke(() =>
+            {
+                var pyAttrNameStr = PythonInterop.PyString_FromString(attributeName);
+                var pyAttrValue = PythonInterop.PyObject_GetAttr(NativePythonObject, pyAttrNameStr);
+
+                result = PythonTypeConverter.ConvertToClrType<T>(pyAttrValue);
+
+                PythonInterop.Py_DecRef(pyAttrValue);
+                PythonInterop.Py_DecRef(pyAttrNameStr);
+            });
+
+            return result;
         }
 
         public IPythonFunction GetFunction(string functionName)

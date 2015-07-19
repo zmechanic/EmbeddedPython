@@ -399,6 +399,11 @@ namespace EmbeddedPython.Internal
                 return PythonListToClrArray(value, t.GetElementType());
             }
 
+            if (t.IsSubclassOf(typeof(PythonException)))
+            {
+                return ConvertException(value, t);
+            }
+
             if (t == typeof(object))
             {
                 return ConvertToClrType(value, GetClrType(value));
@@ -446,60 +451,81 @@ namespace EmbeddedPython.Internal
                 {
                     return typeof(bool);
                 }
-                else if (pyType == PythonInterop.PyType_String)
+                if (pyType == PythonInterop.PyType_String)
                 {
                     return typeof(string);
                 }
-                else if (pyType == PythonInterop.PyType_Unicode)
+                if (pyType == PythonInterop.PyType_Unicode)
                 {
                     return typeof(string);
                 }
 #if PY_MAJOR_VERSION_3
-                else if (pyType == PythonInterop.PyType_Bytes)
+                if (pyType == PythonInterop.PyType_Bytes)
                 {
                     return typeof(byte[]);
                 }
 #endif
 #if PY_MAJOR_VERSION_2
-                else if (pyType == PythonInterop.PyType_Int)
+                if (pyType == PythonInterop.PyType_Int)
                 {
                     return typeof(int);
                 }
-                else if (pyType == PythonInterop.PyType_LongLong)
+                if (pyType == PythonInterop.PyType_LongLong)
                 {
                     return typeof(long);
                 }
-                else if (pyType == PythonInterop.PyType_UnsignedLongLong)
+                if (pyType == PythonInterop.PyType_UnsignedLongLong)
                 {
                     return typeof(ulong);
                 }
 #endif
-                else if (pyType == PythonInterop.PyType_Long)
+                if (pyType == PythonInterop.PyType_Long)
                 {
                     return typeof(int);
                 }
-                else if (pyType == PythonInterop.PyType_UnsignedLong)
+                if (pyType == PythonInterop.PyType_UnsignedLong)
                 {
                     return typeof(uint);
                 }
-                else if (pyType == PythonInterop.PyType_Float)
+                if (pyType == PythonInterop.PyType_Float)
                 {
                     return typeof(double);
                 }
-                else if (pyType == PythonInterop.PyType_Dict)
+                if (pyType == PythonInterop.PyType_Dict)
                 {
                     return typeof(IPythonDictionary);
                 }
-                else if (pyType == PythonInterop.PyType_Tuple)
+                if (pyType == PythonInterop.PyType_Tuple)
                 {
                     return typeof(IPythonTuple);
                 }
-                else if (pyType == PythonInterop.PyType_List)
+                if (pyType == PythonInterop.PyType_List)
                 {
                     return typeof(IPythonList);
                 }
 
-                throw new PythonException("Unsupported Python type.");
+                if (PythonInterop.PyObject_IsSubclass(pyType, PythonInterop.PyType_TabError) == 1)
+                {
+                    return typeof(PythonTabError);
+                }
+                if (PythonInterop.PyObject_IsSubclass(pyType, PythonInterop.PyType_IndentationError) == 1)
+                {
+                    return typeof(PythonIndentationError);
+                }
+                if (PythonInterop.PyObject_IsSubclass(pyType, PythonInterop.PyType_SyntaxError) == 1)
+                {
+                    return typeof(PythonSyntaxError);
+                }
+                if (PythonInterop.PyObject_IsSubclass(pyType, PythonInterop.PyType_BaseException) == 1)
+                {
+                    return typeof(PythonException);
+                }
+
+                var pyTypeStr = PythonInterop.PyObject_Str(pyType);
+                var typeName = PythonInterop.PyString_ToString(pyTypeStr);
+                PythonInterop.Py_DecRef(pyTypeStr);
+
+                throw new PythonException(string.Format("Unsupported Python type \"{0}\".", typeName));
             }
             finally
             {
@@ -519,6 +545,27 @@ namespace EmbeddedPython.Internal
             }
 
             return array;
+        }
+
+        private static PythonException ConvertException(IntPtr value, Type t)
+        {
+            if (t.IsSubclassOf(typeof(PythonSyntaxError)))
+            {
+                var pyError = new PythonObject(value, false);
+
+                return (PythonException)Activator.CreateInstance(
+                    t,
+                    pyError.GetAttr<string>("msg"),
+                    pyError.GetAttr<string>("filename"),
+                    pyError.GetAttr<int>("lineno"),
+                    pyError.GetAttr<int>("offset"),
+                    pyError.GetAttr<string>("text"));
+            }
+
+            var pyErrorStr = PythonInterop.PyObject_Str(value);
+            var errorStr = PythonInterop.PyString_ToString(pyErrorStr);
+            PythonInterop.Py_DecRef(pyErrorStr);
+            return new PythonException(errorStr);
         }
     }
 }

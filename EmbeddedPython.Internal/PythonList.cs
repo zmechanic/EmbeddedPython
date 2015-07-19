@@ -44,7 +44,7 @@
             }
         }
 
-        public int Size
+        public override int Size
         {
             get
             {
@@ -55,7 +55,7 @@
                     PythonInterop.PyGILState_Invoke(() =>
                     {
                         size = PythonInterop.PyList_Size(NativePythonObject);
-                        if (size == 0)
+                        if (size < 0)
                         {
                             throw PythonInterop.PyErr_Fetch();
                         }

@@ -107,6 +107,29 @@ namespace EmbeddedPython.Internal
                 "tempClass");
             PythonInterop.PyType_Instance = PythonInterop.PyObject_Type(op);
             PythonInterop.Py_DecRef(op);
+
+            var pyErrors = _mainModule.Execute(
+                "tempBaseException = BaseException()\n" +
+                "tempSyntaxError = SyntaxError()\n" +
+                "tempIndentationError = IndentationError()\n" +
+                "tempTabError = TabError()\n",
+                new Dictionary<string, Type>
+                {
+                    {"tempBaseException", typeof(IntPtr) },
+                    {"tempSyntaxError", typeof(IntPtr) },
+                    {"tempIndentationError", typeof(IntPtr) },
+                    {"tempTabError", typeof(IntPtr) }
+                });
+
+            PythonInterop.PyType_BaseException = PythonInterop.PyObject_Type((IntPtr)pyErrors[0]);
+            PythonInterop.PyType_SyntaxError = PythonInterop.PyObject_Type((IntPtr)pyErrors[1]);
+            PythonInterop.PyType_IndentationError = PythonInterop.PyObject_Type((IntPtr)pyErrors[2]);
+            PythonInterop.PyType_TabError = PythonInterop.PyObject_Type((IntPtr)pyErrors[3]);
+
+            foreach (var pyError in pyErrors)
+            {
+                PythonInterop.Py_DecRef((IntPtr)pyError);
+            }
         }
 
         internal static void Deinitialize()
