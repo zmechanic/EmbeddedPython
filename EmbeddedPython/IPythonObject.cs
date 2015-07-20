@@ -56,6 +56,12 @@ namespace EmbeddedPython
         void SetAttr(string attributeName, object value);
 
         /// <summary>
+        /// Deletes Python object's attribute.
+        /// </summary>
+        /// <param name="attributeName">Name of attribute.</param>
+        void DelAttr(string attributeName);
+
+        /// <summary>
         /// Gets Python function wrapper.
         /// </summary>
         /// <param name="functionName">Name of the Python function to get CLR invoke function for.</param>

@@ -96,5 +96,33 @@ namespace EmbeddedPython.UnitTests
 
             Assert.IsNotNull(result);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(PythonException))]
+        public void GetAttr_WithIncorrectName_ThrowsException()
+        {
+            var module = Python.ImportModule(ModulePath, ModuleMain);
+            var testTarget = module.Execute<IPythonObject>("o = MyClass()", "o");
+
+            var result = testTarget.GetAttr("__not_an_attribute__");
+
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public void SetAttr_WithCorrectName_SetsAttribute()
+        {
+            const string attributeValue = "test";
+            const string attributeName = "new_attribute";
+
+            var module = Python.ImportModule(ModulePath, ModuleMain);
+            var testTarget = module.Execute<IPythonObject>("o = MyClass()", "o");
+
+            testTarget.SetAttr(attributeName, attributeValue);
+
+            var result = testTarget.GetAttr<string>(attributeName);
+
+            Assert.AreEqual(attributeValue, result);
+        }
     }
 }

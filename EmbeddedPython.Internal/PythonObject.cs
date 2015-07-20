@@ -155,16 +155,23 @@ namespace EmbeddedPython.Internal
                 PythonInterop.PyGILState_Invoke(() =>
                 {
                     var pyAttrNameStr = PythonInterop.PyString_FromString(attributeName);
-                    var pyAttrValue = PythonInterop.PyObject_GetAttr(NativePythonObject, pyAttrNameStr);
-                    if (pyAttrValue == IntPtr.Zero)
+
+                    try
                     {
-                        throw PythonInterop.PyErr_Fetch();
+                        var pyAttrValue = PythonInterop.PyObject_GetAttr(NativePythonObject, pyAttrNameStr);
+                        if (pyAttrValue == IntPtr.Zero)
+                        {
+                            throw PythonInterop.PyErr_Fetch();
+                        }
+
+                        result = PythonTypeConverter.ConvertToClrType<T>(pyAttrValue);
+
+                        PythonInterop.Py_DecRef(pyAttrValue);
                     }
-
-                    result = PythonTypeConverter.ConvertToClrType<T>(pyAttrValue);
-
-                    PythonInterop.Py_DecRef(pyAttrValue);
-                    PythonInterop.Py_DecRef(pyAttrNameStr);
+                    finally
+                    {
+                        PythonInterop.Py_DecRef(pyAttrNameStr);
+                    }
                 });
             }
             catch (Exception ex)
@@ -189,18 +196,50 @@ namespace EmbeddedPython.Internal
                     var pyAttrNameStr = PythonInterop.PyString_FromString(attributeName);
                     var pyAttrValue = PythonTypeConverter.ConvertToPythonType(value);
 
-                    if (PythonInterop.PyObject_SetAttr(NativePythonObject, pyAttrNameStr, pyAttrValue) == -1)
+                    try
                     {
-                        throw PythonInterop.PyErr_Fetch();
+                        if (PythonInterop.PyObject_SetAttr(NativePythonObject, pyAttrNameStr, pyAttrValue) == -1)
+                        {
+                            throw PythonInterop.PyErr_Fetch();
+                        }
                     }
-
-                    PythonInterop.Py_DecRef(pyAttrValue);
-                    PythonInterop.Py_DecRef(pyAttrNameStr);
+                    finally
+                    {
+                        PythonInterop.Py_DecRef(pyAttrValue);
+                        PythonInterop.Py_DecRef(pyAttrNameStr);
+                    }
                 });
             }
             catch (Exception ex)
             {
                 throw new PythonException(string.Format("Cannot set attribute {0}. Encountered Python error \"{1}\".", attributeName, ex.Message), ex);
+            }
+        }
+
+        public void DelAttr(string attributeName)
+        {
+            try
+            {
+                PythonInterop.PyGILState_Invoke(() =>
+                {
+                    var pyAttrNameStr = PythonInterop.PyString_FromString(attributeName);
+
+                    try
+                    {
+                        if (PythonInterop.PyObject_DelAttr(NativePythonObject, pyAttrNameStr) == 1)
+                        {
+                            throw PythonInterop.PyErr_Fetch();
+                        }
+                    }
+                    finally
+                    {
+                        PythonInterop.Py_DecRef(pyAttrNameStr);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new PythonException(string.Format("Cannot delete attribute {0}. Encountered Python error \"{1}\".", attributeName, ex.Message), ex);
             }
         }
 
@@ -293,10 +332,17 @@ namespace EmbeddedPython.Internal
             PythonInterop.PyGILState_Invoke(() =>
             {
                 var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg);
-                var presult = CallMethod(methodName, pyarg0);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
+
+                try
+                {
+                    var presult = CallMethod(methodName, pyarg0);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    PythonInterop.Py_DecRef(pyarg0);
+                }
             });
             return result;
         }
@@ -309,11 +355,18 @@ namespace EmbeddedPython.Internal
             {
                 var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
                 var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var presult = CallMethod(methodName, pyarg0, pyarg1);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
+
+                try
+                {
+                    var presult = CallMethod(methodName, pyarg0, pyarg1);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    PythonInterop.Py_DecRef(pyarg0);
+                    PythonInterop.Py_DecRef(pyarg1);
+                }
             });
             return result;
         }
@@ -327,12 +380,19 @@ namespace EmbeddedPython.Internal
                 var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
                 var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
                 var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
+
+                try
+                {
+                    var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    PythonInterop.Py_DecRef(pyarg0);
+                    PythonInterop.Py_DecRef(pyarg1);
+                    PythonInterop.Py_DecRef(pyarg2);
+                }
             });
             return result;
         }
@@ -347,13 +407,20 @@ namespace EmbeddedPython.Internal
                 var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
                 var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
                 var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-                var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
+
+                try
+                {
+                    var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    PythonInterop.Py_DecRef(pyarg0);
+                    PythonInterop.Py_DecRef(pyarg1);
+                    PythonInterop.Py_DecRef(pyarg2);
+                    PythonInterop.Py_DecRef(pyarg3);
+                }
             });
             return result;
         }
@@ -369,14 +436,21 @@ namespace EmbeddedPython.Internal
                 var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
                 var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
                 var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-                var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
-                PythonInterop.Py_DecRef(pyarg4);
+
+                try
+                {
+                    var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    PythonInterop.Py_DecRef(pyarg0);
+                    PythonInterop.Py_DecRef(pyarg1);
+                    PythonInterop.Py_DecRef(pyarg2);
+                    PythonInterop.Py_DecRef(pyarg3);
+                    PythonInterop.Py_DecRef(pyarg4);
+                }
             });
             return result;
         }
@@ -393,15 +467,22 @@ namespace EmbeddedPython.Internal
                 var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
                 var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
                 var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
-                var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
-                PythonInterop.Py_DecRef(pyarg4);
-                PythonInterop.Py_DecRef(pyarg5);
+
+                try
+                {
+                    var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    PythonInterop.Py_DecRef(pyarg0);
+                    PythonInterop.Py_DecRef(pyarg1);
+                    PythonInterop.Py_DecRef(pyarg2);
+                    PythonInterop.Py_DecRef(pyarg3);
+                    PythonInterop.Py_DecRef(pyarg4);
+                    PythonInterop.Py_DecRef(pyarg5);
+                }
             });
             return result;
         }
@@ -419,16 +500,23 @@ namespace EmbeddedPython.Internal
                 var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
                 var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
                 var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg7);
-                var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
-                PythonInterop.Py_DecRef(pyarg4);
-                PythonInterop.Py_DecRef(pyarg5);
-                PythonInterop.Py_DecRef(pyarg6);
+
+                try
+                {
+                    var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    PythonInterop.Py_DecRef(pyarg0);
+                    PythonInterop.Py_DecRef(pyarg1);
+                    PythonInterop.Py_DecRef(pyarg2);
+                    PythonInterop.Py_DecRef(pyarg3);
+                    PythonInterop.Py_DecRef(pyarg4);
+                    PythonInterop.Py_DecRef(pyarg5);
+                    PythonInterop.Py_DecRef(pyarg6);
+                }
             });
             return result;
         }
@@ -447,17 +535,24 @@ namespace EmbeddedPython.Internal
                 var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
                 var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg7);
                 var pyarg7 = PythonTypeConverter.ConvertToPythonType(arg8);
-                var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
-                PythonInterop.Py_DecRef(pyarg4);
-                PythonInterop.Py_DecRef(pyarg5);
-                PythonInterop.Py_DecRef(pyarg6);
-                PythonInterop.Py_DecRef(pyarg7);
+
+                try
+                {
+                    var presult = CallMethod(methodName, pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    PythonInterop.Py_DecRef(pyarg0);
+                    PythonInterop.Py_DecRef(pyarg1);
+                    PythonInterop.Py_DecRef(pyarg2);
+                    PythonInterop.Py_DecRef(pyarg3);
+                    PythonInterop.Py_DecRef(pyarg4);
+                    PythonInterop.Py_DecRef(pyarg5);
+                    PythonInterop.Py_DecRef(pyarg6);
+                    PythonInterop.Py_DecRef(pyarg7);
+                }
             });
             return result;
         }
@@ -548,46 +643,51 @@ namespace EmbeddedPython.Internal
                 PythonInterop.PyGILState_Invoke(() =>
                 {
                     var pyMethodName = PythonInterop.PyString_FromString(methodName);
-                    
-                    switch (args.Length)
-                    {
-                        case 0:
-                            result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, IntPtr.Zero);
-                            break;
-                        case 1:
-                            result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], IntPtr.Zero);
-                            break;
-                        case 2:
-                            result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], IntPtr.Zero);
-                            break;
-                        case 3:
-                            result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], args[2], IntPtr.Zero);
-                            break;
-                        case 4:
-                            result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], args[2], args[3], IntPtr.Zero);
-                            break;
-                        case 5:
-                            result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], args[2], args[3], args[4], IntPtr.Zero);
-                            break;
-                        case 6:
-                            result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], args[2], args[3], args[4], args[5], IntPtr.Zero);
-                            break;
-                        case 7:
-                            result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], args[2], args[3], args[4], args[5], args[6], IntPtr.Zero);
-                            break;
-                        case 8:
-                            result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], IntPtr.Zero);
-                            break;
-                        default:
-                            throw new PythonException(string.Format("Not supported number of {0} arguments for CallMethod method.", args.Length));
-                    }
 
-                    if (result == IntPtr.Zero)
+                    try
                     {
-                        throw PythonInterop.PyErr_Fetch();
-                    }
+                        switch (args.Length)
+                        {
+                            case 0:
+                                result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, IntPtr.Zero);
+                                break;
+                            case 1:
+                                result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], IntPtr.Zero);
+                                break;
+                            case 2:
+                                result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], IntPtr.Zero);
+                                break;
+                            case 3:
+                                result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], args[2], IntPtr.Zero);
+                                break;
+                            case 4:
+                                result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], args[2], args[3], IntPtr.Zero);
+                                break;
+                            case 5:
+                                result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], args[2], args[3], args[4], IntPtr.Zero);
+                                break;
+                            case 6:
+                                result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], args[2], args[3], args[4], args[5], IntPtr.Zero);
+                                break;
+                            case 7:
+                                result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], args[2], args[3], args[4], args[5], args[6], IntPtr.Zero);
+                                break;
+                            case 8:
+                                result = PythonInterop.PyObject_CallMethodObjArgs(NativePythonObject, pyMethodName, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], IntPtr.Zero);
+                                break;
+                            default:
+                                throw new PythonException(string.Format("Not supported number of {0} arguments for CallMethod method.", args.Length));
+                        }
 
-                    PythonInterop.Py_DecRef(pyMethodName);
+                        if (result == IntPtr.Zero)
+                        {
+                            throw PythonInterop.PyErr_Fetch();
+                        }
+                    }
+                    finally
+                    {
+                        PythonInterop.Py_DecRef(pyMethodName);
+                    }
                 });
             }
             catch (Exception ex)

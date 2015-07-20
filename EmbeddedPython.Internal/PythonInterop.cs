@@ -322,6 +322,10 @@ namespace EmbeddedPython.Internal
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern int
+        PyObject_DelAttrString(IntPtr pointer, IntPtr name);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern int
         PyObject_HasAttr(IntPtr pointer, IntPtr name);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
@@ -331,6 +335,10 @@ namespace EmbeddedPython.Internal
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern int
         PyObject_SetAttr(IntPtr pointer, IntPtr name, IntPtr value);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern int
+        PyObject_DelAttr(IntPtr pointer, IntPtr name);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern IntPtr
