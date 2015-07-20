@@ -179,9 +179,15 @@ namespace EmbeddedPython
         /// <summary>
         /// Invokes Python method without arguments.
         /// </summary>
+        /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
+        void CallMethod(string methodName);
+
+        /// <summary>
+        /// Invokes Python method without arguments.
+        /// </summary>
         /// <typeparam name="TResult">Type of method invocation result.</typeparam>
         /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
-        /// <returns>.NET method.</returns>
+        /// <returns>Result of method invocation.</returns>
         TResult CallMethod<TResult>(string methodName);
 
         /// <summary>
@@ -190,7 +196,8 @@ namespace EmbeddedPython
         /// <typeparam name="T">Type of invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of method invocation result.</typeparam>
         /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
-        /// <returns>.NET method.</returns>
+        /// <param name="arg">The argument.</param>
+        /// <returns>Result of method invocation.</returns>
         TResult CallMethod<T, TResult>(string methodName, T arg);
 
         /// <summary>
@@ -200,7 +207,9 @@ namespace EmbeddedPython
         /// <typeparam name="T2">Type of second invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of method invocation result.</typeparam>
         /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
-        /// <returns>.NET method.</returns>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <returns>Result of method invocation.</returns>
         TResult CallMethod<T1, T2, TResult>(string methodName, T1 arg1, T2 arg2);
 
         /// <summary>
@@ -211,7 +220,10 @@ namespace EmbeddedPython
         /// <typeparam name="T3">Type of third invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of method invocation result.</typeparam>
         /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
-        /// <returns>.NET method.</returns>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <returns>Result of method invocation.</returns>
         TResult CallMethod<T1, T2, T3, TResult>(string methodName, T1 arg1, T2 arg2, T3 arg3);
 
         /// <summary>
@@ -223,7 +235,11 @@ namespace EmbeddedPython
         /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of method invocation result.</typeparam>
         /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
-        /// <returns>.NET method.</returns>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <returns>Result of method invocation.</returns>
         TResult CallMethod<T1, T2, T3, T4, TResult>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
 
         /// <summary>
@@ -236,7 +252,12 @@ namespace EmbeddedPython
         /// <typeparam name="T5">Type of fifth invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of method invocation result.</typeparam>
         /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
-        /// <returns>.NET method.</returns>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
+        /// <returns>Result of method invocation.</returns>
         TResult CallMethod<T1, T2, T3, T4, T5, TResult>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
 
         /// <summary>
@@ -250,7 +271,13 @@ namespace EmbeddedPython
         /// <typeparam name="T6">Type of sixth invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of method invocation result.</typeparam>
         /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
-        /// <returns>.NET method.</returns>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
+        /// <param name="arg6">Sixth argument.</param>
+        /// <returns>Result of method invocation.</returns>
         TResult CallMethod<T1, T2, T3, T4, T5, T6, TResult>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6);
 
         /// <summary>
@@ -265,7 +292,14 @@ namespace EmbeddedPython
         /// <typeparam name="T7">Type of seventh invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of method invocation result.</typeparam>
         /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
-        /// <returns>.NET method.</returns>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
+        /// <param name="arg6">Sixth argument.</param>
+        /// <param name="arg7">Seventh argument.</param>
+        /// <returns>Result of method invocation.</returns>
         TResult CallMethod<T1, T2, T3, T4, T5, T6, T7, TResult>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7);
 
         /// <summary>
@@ -281,7 +315,15 @@ namespace EmbeddedPython
         /// <typeparam name="T8">Type of eighth invocation argument.</typeparam>
         /// <typeparam name="TResult">Type of method invocation result.</typeparam>
         /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
-        /// <returns>.NET method.</returns>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
+        /// <param name="arg6">Sixth argument.</param>
+        /// <param name="arg7">Seventh argument.</param>
+        /// <param name="arg8">Eighth argument.</param>
+        /// <returns>Result of method invocation.</returns>
         TResult CallMethod<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8);
     }
 }

@@ -894,7 +894,11 @@ namespace EmbeddedPython.Internal
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern void
-        PySys_SetArgv(int argc, IntPtr argv);
+        PySys_SetArgv(int argc, string[] argv);
+
+        [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        internal static unsafe extern void
+        PySys_SetArgvEx(int argc, string[] argv, int updatepath);
 
         [DllImport(PY_DLL, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, CharSet = CharSet.Ansi)]
         internal static unsafe extern IntPtr

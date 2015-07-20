@@ -1,10 +1,8 @@
 ﻿using System;
-using System.IO;
+using System.Threading;
 
 namespace EmbeddedPython.Tests
 {
-    using System.Text;
-
     class Program
     {
         static void Main(string[] args)
@@ -20,10 +18,16 @@ namespace EmbeddedPython.Tests
             var py3_m1 = python3.ImportModule("Module1", "Main");
 
             var o = py3_m1.Execute<IPythonObject>("b=MyClass()", "b");
-            var attr = o.Dir;
-            var rrr = o.CallMethod<IPythonObject>("doSomething");
+            o.CallMethod("loadSounds");
 
             Console.ReadLine();
+            o.CallMethod("doSomething");
+
+            Console.ReadLine();
+            o.CallMethod("doSomething");
+            
+            Console.ReadLine();
+            o.CallMethod("doSomething");
 
             python3.Dispose();
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace EmbeddedPython.Internal
 {
@@ -20,6 +21,8 @@ namespace EmbeddedPython.Internal
             }
 
             PythonInterop.PyEval_InitThreads();
+
+            PythonInterop.PySys_SetArgvEx(0, new[] { Environment.CurrentDirectory }, 0);
 
             _mainModule = new PythonModule("__main__");
 
@@ -200,12 +203,14 @@ namespace EmbeddedPython.Internal
 
             var moduleHash = modulePath + "/" + moduleName;
 
-            if (!Modules.TryGetValue(moduleHash, out module))
+            if (Modules.TryGetValue(moduleHash, out module))
             {
-                module = new PythonModule(modulePath, moduleName);
-
-                Modules.Add(moduleHash, module);
+                return module;
             }
+
+            module = new PythonModule(modulePath, moduleName);
+
+            Modules.Add(moduleHash, module);
 
             return module;
         }

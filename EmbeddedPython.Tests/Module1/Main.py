@@ -4,10 +4,13 @@ import pygame
 
 class MyClass:
     def __init__(self):
-        self._x = 12
+        self._sound = None
+
+    def loadSounds(self):
+        pygame.mixer.init()
+        self._sound = pygame.mixer.Sound("Papero_1.wav")
+        return
 
     def doSomething(self):
-        pygame.mixer.init()
-        sound = pygame.mixer.Sound("C:/222/Papero_1.wav")
-        sound.play()
+        self._sound.play()
         return
