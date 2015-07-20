@@ -112,19 +112,22 @@ namespace EmbeddedPython.Internal
                 "tempBaseException = BaseException()\n" +
                 "tempSyntaxError = SyntaxError()\n" +
                 "tempIndentationError = IndentationError()\n" +
-                "tempTabError = TabError()\n",
+                "tempTabError = TabError()\n" +
+                "tempImportError = ImportError()\n",
                 new Dictionary<string, Type>
                 {
                     {"tempBaseException", typeof(IntPtr) },
                     {"tempSyntaxError", typeof(IntPtr) },
                     {"tempIndentationError", typeof(IntPtr) },
-                    {"tempTabError", typeof(IntPtr) }
+                    {"tempTabError", typeof(IntPtr) },
+                    {"tempImportError", typeof(IntPtr) }
                 });
 
             PythonInterop.PyType_BaseException = PythonInterop.PyObject_Type((IntPtr)pyErrors[0]);
             PythonInterop.PyType_SyntaxError = PythonInterop.PyObject_Type((IntPtr)pyErrors[1]);
             PythonInterop.PyType_IndentationError = PythonInterop.PyObject_Type((IntPtr)pyErrors[2]);
             PythonInterop.PyType_TabError = PythonInterop.PyObject_Type((IntPtr)pyErrors[3]);
+            PythonInterop.PyType_ImportError = PythonInterop.PyObject_Type((IntPtr)pyErrors[4]);
 
             foreach (var pyError in pyErrors)
             {

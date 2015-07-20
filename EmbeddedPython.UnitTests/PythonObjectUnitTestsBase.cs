@@ -2,6 +2,8 @@
 
 namespace EmbeddedPython.UnitTests
 {
+    using System.Linq;
+
     public abstract class PythonObjectUnitTestsBase : PythonVersionSpecificUnitTestBase
     {
         private const string ModulePath = "Python/ObjectTest";
@@ -27,6 +29,72 @@ namespace EmbeddedPython.UnitTests
             var str = testTarget.ToString();
 
             Assert.IsFalse(string.IsNullOrEmpty(str));
+        }
+
+        [TestMethod]
+        public void Dir_Property_Succeeds()
+        {
+            var module = Python.ImportModule(ModulePath, ModuleMain);
+            var testTarget = module.Execute<IPythonObject>("o = MyClass()", "o");
+
+            var result = testTarget.Dir;
+
+            Assert.IsTrue(result.Any());
+        }
+
+        [TestMethod]
+        public void Size_Property_Succeeds()
+        {
+            var module = Python.ImportModule(ModulePath, ModuleMain);
+            var testTarget = module.Execute<IPythonObject>("o = 'test'", "o");
+
+            var result = testTarget.Size;
+
+            Assert.AreEqual(4, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(PythonException))]
+        public void Size_PropertyNoSizeImplemented_ThrowsException()
+        {
+            var module = Python.ImportModule(ModulePath, ModuleMain);
+            var testTarget = module.Execute<IPythonObject>("o = MyClass()", "o");
+
+            // ReSharper disable once UnusedVariable
+            var result = testTarget.Size;
+        }
+
+        [TestMethod]
+        public void HasAttr_WithCorrectName_ReturnsTrue()
+        {
+            var module = Python.ImportModule(ModulePath, ModuleMain);
+            var testTarget = module.Execute<IPythonObject>("o = MyClass()", "o");
+
+            var result = testTarget.HasAttr("__class__");
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void HasAttr_WithIncorrectName_ReturnsFalse()
+        {
+            var module = Python.ImportModule(ModulePath, ModuleMain);
+            var testTarget = module.Execute<IPythonObject>("o = MyClass()", "o");
+
+            var result = testTarget.HasAttr("__not_an_attribute__");
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void GetAttr_WithCorrectName_ReturnsExpectedValue()
+        {
+            var module = Python.ImportModule(ModulePath, ModuleMain);
+            var testTarget = module.Execute<IPythonObject>("o = MyClass()", "o");
+
+            var result = testTarget.GetAttr("__class__");
+
+            Assert.IsNotNull(result);
         }
     }
 }

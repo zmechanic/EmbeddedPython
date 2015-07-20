@@ -10,5 +10,4 @@ class MyClass:
         pygame.mixer.init()
         sound = pygame.mixer.Sound("C:/222/Papero_1.wav")
         sound.play()
-		a++
         return

@@ -27,12 +27,33 @@ namespace EmbeddedPython
         IEnumerable<string> Dir { get; }
 
         /// <summary>
-        /// Gets Python obect's attribute value.
+        /// Gets Python object's attribute value.
         /// </summary>
-        /// <typeparam name="T">Value type.</typeparam>
+        /// <typeparam name="T">Type of value.</typeparam>
         /// <param name="attributeName">Name of attribute.</param>
         /// <returns>Value of attribute.</returns>
         T GetAttr<T>(string attributeName);
+
+        /// <summary>
+        /// Gets flag indicating whether Python object has attribute.
+        /// </summary>
+        /// <param name="attributeName">Name of attribute.</param>
+        /// <returns>True if attribute present</returns>
+        bool HasAttr(string attributeName);
+
+        /// <summary>
+        /// Gets Python object's attribute value.
+        /// </summary>
+        /// <param name="attributeName">Name of attribute.</param>
+        /// <returns>Value of attribute.</returns>
+        object GetAttr(string attributeName);
+
+        /// <summary>
+        /// Sets Python object's attribute value.
+        /// </summary>
+        /// <param name="attributeName">Name of attribute.</param>
+        /// <param name="value">Value of attribute.</param>
+        void SetAttr(string attributeName, object value);
 
         /// <summary>
         /// Gets Python function wrapper.

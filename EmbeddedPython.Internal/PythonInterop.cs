@@ -38,6 +38,7 @@ namespace EmbeddedPython.Internal
         internal static IntPtr PyType_SyntaxError;
         internal static IntPtr PyType_IndentationError;
         internal static IntPtr PyType_TabError;
+        internal static IntPtr PyType_ImportError;
 
         internal const int Py_single_input = 256;
         internal const int Py_file_input = 257;
@@ -1180,7 +1181,17 @@ namespace EmbeddedPython.Internal
 
             if (type != IntPtr.Zero)
             {
-                return (PythonException)PythonTypeConverter.ConvertToClrType<object>(value);
+                var errorConverted = PythonTypeConverter.ConvertToClrType<object>(value);
+
+                if (errorConverted is PythonException)
+                {
+                    return (PythonException)errorConverted;
+                }
+
+                if (errorConverted is string)
+                {
+                    return new PythonException((string)errorConverted);
+                }
             }
 
             return null;

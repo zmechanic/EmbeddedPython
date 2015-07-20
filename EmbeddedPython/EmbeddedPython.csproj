@@ -73,6 +73,7 @@
     <Compile Include="IPythonTuple.cs" />
     <Compile Include="IPythonTypeFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PythonImportError.cs" />
     <Compile Include="PythonIndentationError.cs" />
     <Compile Include="PythonSyntaxError.cs" />
     <Compile Include="PythonException.cs" />

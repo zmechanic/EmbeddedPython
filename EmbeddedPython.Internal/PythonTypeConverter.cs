@@ -5,8 +5,19 @@ using System.Linq;
 
 namespace EmbeddedPython.Internal
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    /// <summary>
+    /// Converts Python values to CLR values and vice versa.
+    /// </summary>
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed. Suppression is OK here.")]
     internal static class PythonTypeConverter
     {
+        /// <summary>
+        /// Converts CLR value to Python value.
+        /// </summary>
+        /// <param name="value">CLR value.</param>
+        /// <returns>Python value.</returns>
         public static IntPtr ConvertToPythonType(object value)
         {
             // ReSharper disable once CompareNonConstrainedGenericWithNull
@@ -154,6 +165,12 @@ namespace EmbeddedPython.Internal
             throw new PythonException(string.Format("Unsupported CLR to Python conversion for source type {0}.", t));
         }
 
+        /// <summary>
+        /// Converts Python value to CLR value.
+        /// </summary>
+        /// <param name="value">Python value.</param>
+        /// <param name="t">Target CLR type.</param>
+        /// <returns>CLR value.</returns>
         public static object ConvertToClrType(IntPtr value, Type t)
         {
             if (value == IntPtr.Zero)
@@ -370,7 +387,10 @@ namespace EmbeddedPython.Internal
                         throw new PythonException(string.Format("Failed to obtain Python tuple size with error \"{0}\".", PythonInterop.PyErr_Fetch()));
                     }
 
-                    if (pyTupleSize != numberOfArgTypes) throw new PythonException(string.Format("Expected tuple of size {0} got size {1}.", numberOfArgTypes, pyTupleSize));
+                    if (pyTupleSize != numberOfArgTypes)
+                    {
+                        throw new PythonException(string.Format("Expected tuple of size {0} got size {1}.", numberOfArgTypes, pyTupleSize));
+                    }
 
                     var values = new object[pyTupleSize];
                     for (var i = 0; i < pyTupleSize; i++)
@@ -399,19 +419,25 @@ namespace EmbeddedPython.Internal
                 return PythonListToClrArray(value, t.GetElementType());
             }
 
-            if (t.IsSubclassOf(typeof(PythonException)))
-            {
-                return ConvertException(value, t);
-            }
-
             if (t == typeof(object))
             {
                 return ConvertToClrType(value, GetClrType(value));
             }
 
+            if (t == typeof(PythonException) || t.IsSubclassOf(typeof(PythonException)))
+            {
+                return ConvertException(value, t);
+            }
+
             throw new PythonException(string.Format("Unsupported Python to CLR conversion for target type {0}.", t));
         }
 
+        /// <summary>
+        /// Converts Python value to CLR value.
+        /// </summary>
+        /// <typeparam name="T">Target CLR type.</typeparam>
+        /// <param name="value">Python value.</param>
+        /// <returns>Casted CLR value.</returns>
         public static T ConvertToClrType<T>(IntPtr value)
         {
             var t = typeof(T);
@@ -431,6 +457,11 @@ namespace EmbeddedPython.Internal
             return (T)Convert.ChangeType(ConvertToClrType(value, t), t);
         }
 
+        /// <summary>
+        /// Gets matched CLR type for Python type of value <paramref name="value"/>.
+        /// </summary>
+        /// <param name="value">Python value.</param>
+        /// <returns>Matched CLR type.</returns>
         public static Type GetClrType(IntPtr value)
         {
             if (value == IntPtr.Zero)
@@ -451,10 +482,12 @@ namespace EmbeddedPython.Internal
                 {
                     return typeof(bool);
                 }
+
                 if (pyType == PythonInterop.PyType_String)
                 {
                     return typeof(string);
                 }
+
                 if (pyType == PythonInterop.PyType_Unicode)
                 {
                     return typeof(string);
@@ -470,10 +503,12 @@ namespace EmbeddedPython.Internal
                 {
                     return typeof(int);
                 }
+
                 if (pyType == PythonInterop.PyType_LongLong)
                 {
                     return typeof(long);
                 }
+
                 if (pyType == PythonInterop.PyType_UnsignedLongLong)
                 {
                     return typeof(ulong);
@@ -483,22 +518,27 @@ namespace EmbeddedPython.Internal
                 {
                     return typeof(int);
                 }
+
                 if (pyType == PythonInterop.PyType_UnsignedLong)
                 {
                     return typeof(uint);
                 }
+
                 if (pyType == PythonInterop.PyType_Float)
                 {
                     return typeof(double);
                 }
+
                 if (pyType == PythonInterop.PyType_Dict)
                 {
                     return typeof(IPythonDictionary);
                 }
+
                 if (pyType == PythonInterop.PyType_Tuple)
                 {
                     return typeof(IPythonTuple);
                 }
+
                 if (pyType == PythonInterop.PyType_List)
                 {
                     return typeof(IPythonList);
@@ -508,24 +548,28 @@ namespace EmbeddedPython.Internal
                 {
                     return typeof(PythonTabError);
                 }
+
                 if (PythonInterop.PyObject_IsSubclass(pyType, PythonInterop.PyType_IndentationError) == 1)
                 {
                     return typeof(PythonIndentationError);
                 }
+
                 if (PythonInterop.PyObject_IsSubclass(pyType, PythonInterop.PyType_SyntaxError) == 1)
                 {
                     return typeof(PythonSyntaxError);
                 }
+
+                if (PythonInterop.PyObject_IsSubclass(pyType, PythonInterop.PyType_ImportError) == 1)
+                {
+                    return typeof(PythonImportError);
+                }
+
                 if (PythonInterop.PyObject_IsSubclass(pyType, PythonInterop.PyType_BaseException) == 1)
                 {
                     return typeof(PythonException);
                 }
 
-                var pyTypeStr = PythonInterop.PyObject_Str(pyType);
-                var typeName = PythonInterop.PyString_ToString(pyTypeStr);
-                PythonInterop.Py_DecRef(pyTypeStr);
-
-                throw new PythonException(string.Format("Unsupported Python type \"{0}\".", typeName));
+                return typeof(IPythonObject);
             }
             finally
             {
@@ -533,6 +577,12 @@ namespace EmbeddedPython.Internal
             }
         }
 
+        /// <summary>
+        /// Converts Python list to CLR array.
+        /// </summary>
+        /// <param name="pyList">Python list.</param>
+        /// <param name="elementType">Target type of CLR elements.</param>
+        /// <returns>CLR array.</returns>
         private static Array PythonListToClrArray(IntPtr pyList, Type elementType)
         {
             var numberOfItems = PythonInterop.PyList_Size(pyList);
@@ -547,12 +597,18 @@ namespace EmbeddedPython.Internal
             return array;
         }
 
+        /// <summary>
+        /// Converts Python exception/error to CLR exception.
+        /// </summary>
+        /// <param name="value">Python exception/error.</param>
+        /// <param name="t">Target exception type.</param>
+        /// <returns>CLR exception.</returns>
         private static PythonException ConvertException(IntPtr value, Type t)
         {
+            var pyError = new PythonObject(value, false);
+
             if (t.IsSubclassOf(typeof(PythonSyntaxError)))
             {
-                var pyError = new PythonObject(value, false);
-
                 return (PythonException)Activator.CreateInstance(
                     t,
                     pyError.GetAttr<string>("msg"),
@@ -562,10 +618,27 @@ namespace EmbeddedPython.Internal
                     pyError.GetAttr<string>("text"));
             }
 
+            if (t == typeof(PythonImportError))
+            {
+                return new PythonImportError(
+                    pyError.GetAttr<string>("msg"),
+                    pyError.GetAttr<string>("name"),
+                    pyError.GetAttr<string>("path"));
+            }
+
+            var pyType = PythonInterop.PyObject_Type(value);
+            var pyTypeStr = PythonInterop.PyObject_Str(pyType);
+            var typeName = PythonInterop.PyString_ToString(pyTypeStr);
+            PythonInterop.Py_DecRef(pyTypeStr);
+            PythonInterop.Py_DecRef(pyType);
+
             var pyErrorStr = PythonInterop.PyObject_Str(value);
             var errorStr = PythonInterop.PyString_ToString(pyErrorStr);
             PythonInterop.Py_DecRef(pyErrorStr);
-            return new PythonException(errorStr);
+
+            pyError.Dispose();
+
+            return new PythonException(string.Format("{0} ({1})", errorStr, typeName));
         }
     }
 }

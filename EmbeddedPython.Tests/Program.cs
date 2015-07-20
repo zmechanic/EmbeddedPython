@@ -20,6 +20,7 @@ namespace EmbeddedPython.Tests
             var py3_m1 = python3.ImportModule("Module1", "Main");
 
             var o = py3_m1.Execute<IPythonObject>("b=MyClass()", "b");
+            var attr = o.Dir;
             var rrr = o.CallMethod<IPythonObject>("doSomething");
 
             Console.ReadLine();

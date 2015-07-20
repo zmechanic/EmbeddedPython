@@ -130,22 +130,78 @@ namespace EmbeddedPython.Internal
             }
         }
 
-        public T GetAttr<T>(string attributeName)
+        public bool HasAttr(string attributeName)
         {
-            var result = default(T);
+            var result = false;
 
             PythonInterop.PyGILState_Invoke(() =>
             {
                 var pyAttrNameStr = PythonInterop.PyString_FromString(attributeName);
-                var pyAttrValue = PythonInterop.PyObject_GetAttr(NativePythonObject, pyAttrNameStr);
 
-                result = PythonTypeConverter.ConvertToClrType<T>(pyAttrValue);
+                result = PythonInterop.PyObject_HasAttr(NativePythonObject, pyAttrNameStr) == 1;
 
-                PythonInterop.Py_DecRef(pyAttrValue);
                 PythonInterop.Py_DecRef(pyAttrNameStr);
             });
 
             return result;
+        }
+
+        public T GetAttr<T>(string attributeName)
+        {
+            var result = default(T);
+
+            try
+            {
+                PythonInterop.PyGILState_Invoke(() =>
+                {
+                    var pyAttrNameStr = PythonInterop.PyString_FromString(attributeName);
+                    var pyAttrValue = PythonInterop.PyObject_GetAttr(NativePythonObject, pyAttrNameStr);
+                    if (pyAttrValue == IntPtr.Zero)
+                    {
+                        throw PythonInterop.PyErr_Fetch();
+                    }
+
+                    result = PythonTypeConverter.ConvertToClrType<T>(pyAttrValue);
+
+                    PythonInterop.Py_DecRef(pyAttrValue);
+                    PythonInterop.Py_DecRef(pyAttrNameStr);
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new PythonException(string.Format("Cannot get attribute {0}. Encountered Python error \"{1}\".", attributeName, ex.Message), ex);
+            }
+
+            return result;
+        }
+
+        public object GetAttr(string attributeName)
+        {
+            return GetAttr<object>(attributeName);
+        }
+
+        public void SetAttr(string attributeName, object value)
+        {
+            try
+            {
+                PythonInterop.PyGILState_Invoke(() =>
+                {
+                    var pyAttrNameStr = PythonInterop.PyString_FromString(attributeName);
+                    var pyAttrValue = PythonTypeConverter.ConvertToPythonType(value);
+
+                    if (PythonInterop.PyObject_SetAttr(NativePythonObject, pyAttrNameStr, pyAttrValue) == -1)
+                    {
+                        throw PythonInterop.PyErr_Fetch();
+                    }
+
+                    PythonInterop.Py_DecRef(pyAttrValue);
+                    PythonInterop.Py_DecRef(pyAttrNameStr);
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new PythonException(string.Format("Cannot set attribute {0}. Encountered Python error \"{1}\".", attributeName, ex.Message), ex);
+            }
         }
 
         public IPythonFunction GetFunction(string functionName)
