@@ -86,6 +86,11 @@ namespace EmbeddedPython.Internal
             _dictionary = new PythonDictionary(this);
         }
 
+        internal PythonModule(IntPtr nativePythonObject, bool incrementReference)
+            : base(nativePythonObject, incrementReference)
+        {
+        }
+
         public string FullName
         {
             get

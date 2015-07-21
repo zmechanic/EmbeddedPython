@@ -2,15 +2,9 @@ import sys
 import os
 import pygame
 
-class MyClass:
+class Main:
     def __init__(self):
-        self._sound = None
-
-    def loadSounds(self):
-        pygame.mixer.init()
-        self._sound = pygame.mixer.Sound("Papero_1.wav")
-        return
-
-    def doSomething(self):
-        self._sound.play()
-        return
+        pygame.init()
+        
+    def __del__(self):
+        pygame.quit()

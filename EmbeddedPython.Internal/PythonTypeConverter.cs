@@ -193,6 +193,11 @@ namespace EmbeddedPython.Internal
                 return new PythonObject(value, true);
             }
 
+            if (t == typeof(IPythonModule))
+            {
+                return new PythonModule(value, true);
+            }
+
             if (t == typeof(bool))
             {
                 if (value == PythonInterop.Py_True)
@@ -542,6 +547,11 @@ namespace EmbeddedPython.Internal
                 if (pyType == PythonInterop.PyType_List)
                 {
                     return typeof(IPythonList);
+                }
+
+                if (pyType == PythonInterop.PyType_Module)
+                {
+                    return typeof(IPythonModule);
                 }
 
                 if (PythonInterop.PyObject_IsSubclass(pyType, PythonInterop.PyType_TabError) == 1)

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Threading;
+using System.Diagnostics;
 
 namespace EmbeddedPython.Tests
 {
@@ -15,19 +15,35 @@ namespace EmbeddedPython.Tests
 
             //var tuple = python3.MainModule.Execute<Tuple<int, int>>("b=(1,2)\n", "b");
 
-            var py3_m1 = python3.ImportModule("Module1", "Main");
+            var moduleMain = python3.ImportModule("Module1", "Main");
+            var moduleScreen = python3.ImportModule("Module1", "Screen");
 
-            var o = py3_m1.Execute<IPythonObject>("b=MyClass()", "b");
-            o.CallMethod("loadSounds");
+            var main = moduleMain.Execute<IPythonObject>("instance = Main()", "instance");
+            var screen = moduleScreen.Execute<IPythonObject>("instance = Screen()", "instance");
 
-            Console.ReadLine();
-            o.CallMethod("doSomething");
+            var pygameDisplay = screen.CallMethod<IPythonModule>("get_display");
+            var funcGetDriver = pygameDisplay.GetFunction<string>("get_driver");
+            var funcUpdate = pygameDisplay.GetFunction<int>("update");
 
+            var pygameScreen = screen.CallMethod<IPythonObject>("get_screen");
+            pygameScreen.CallMethod<byte[], int>("fill", new byte[] { 255, 0, 0 });
+            funcUpdate();
+/*
+            var sw = new Stopwatch();
+            sw.Start();
+
+            for (var i = 0; i < 1000; i++)
+            {
+                screen.CallMethod("clear1");
+                screen.CallMethod("update");
+                screen.CallMethod("clear0");
+                screen.CallMethod("update");
+            }
+
+            sw.Stop();
+            Console.WriteLine(sw.ElapsedMilliseconds);
+*/
             Console.ReadLine();
-            o.CallMethod("doSomething");
-            
-            Console.ReadLine();
-            o.CallMethod("doSomething");
 
             python3.Dispose();
         }
