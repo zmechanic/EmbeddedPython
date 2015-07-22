@@ -20,7 +20,7 @@ namespace EmbeddedPython.UnitTests
         public void GetFunction_ByName_ReturnsFunction()
         {
             var module = Python.ImportModule(ModulePath, ModuleMain);
-            var func = module.GetFunction<int, int>("pass_value_through");
+            var func = module.GetFunction<int, int>("func1");
             Assert.IsNotNull(func);
         }
 
@@ -33,11 +33,11 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
-        public void GetFunction_ByName_ReturnsSameFunction()
+        public void GetFunction_WithSameName_ReturnsSameFunction()
         {
             var module = Python.ImportModule(ModulePath, ModuleMain);
-            var func1 = module.GetFunction<int, int>("pass_value_through");
-            var func2 = module.GetFunction<int, int>("pass_value_through");
+            var func1 = module.GetFunction<int, int>("func1");
+            var func2 = module.GetFunction<int, int>("func1");
             Assert.AreSame(func1.Method, func2.Method);
         }
 

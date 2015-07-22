@@ -6,6 +6,123 @@
     public interface IPythonFunction : IPythonObject
     {
         /// <summary>
+        /// Invokes function with no arguments.
+        /// </summary>
+        void Invoke();
+
+        /// <summary>
+        /// Invokes function with single argument.
+        /// </summary>
+        /// <typeparam name="T">Type of invocation argument.</typeparam>
+        /// <param name="arg">Function argument.</param>
+        void Invoke<T>(T arg);
+
+        /// <summary>
+        /// Invokes function with two arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        void Invoke<T1, T2>(T1 arg1, T2 arg2);
+
+        /// <summary>
+        /// Invokes function with three arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <typeparam name="T3">Type of third invocation argument.</typeparam>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        void Invoke<T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3);
+
+        /// <summary>
+        /// Invokes function with four arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <typeparam name="T3">Type of third invocation argument.</typeparam>
+        /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        void Invoke<T1, T2, T3, T4>(T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+
+        /// <summary>
+        /// Invokes function with five arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <typeparam name="T3">Type of third invocation argument.</typeparam>
+        /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
+        /// <typeparam name="T5">Type of fifth invocation argument.</typeparam>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
+        void Invoke<T1, T2, T3, T4, T5>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+
+        /// <summary>
+        /// Invokes function with six arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <typeparam name="T3">Type of third invocation argument.</typeparam>
+        /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
+        /// <typeparam name="T5">Type of fifth invocation argument.</typeparam>
+        /// <typeparam name="T6">Type of sixth invocation argument.</typeparam>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
+        /// <param name="arg6">Sixth argument.</param>
+        void Invoke<T1, T2, T3, T4, T5, T6>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6);
+
+        /// <summary>
+        /// Invokes function with seven arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <typeparam name="T3">Type of third invocation argument.</typeparam>
+        /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
+        /// <typeparam name="T5">Type of fifth invocation argument.</typeparam>
+        /// <typeparam name="T6">Type of sixth invocation argument.</typeparam>
+        /// <typeparam name="T7">Type of seventh invocation argument.</typeparam>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
+        /// <param name="arg6">Sixth argument.</param>
+        /// <param name="arg7">Seventh argument.</param>
+        void Invoke<T1, T2, T3, T4, T5, T6, T7>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7);
+
+        /// <summary>
+        /// Invokes function with eight arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <typeparam name="T3">Type of third invocation argument.</typeparam>
+        /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
+        /// <typeparam name="T5">Type of fifth invocation argument.</typeparam>
+        /// <typeparam name="T6">Type of sixth invocation argument.</typeparam>
+        /// <typeparam name="T7">Type of seventh invocation argument.</typeparam>
+        /// <typeparam name="T8">Type of eighth invocation argument.</typeparam>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
+        /// <param name="arg6">Sixth argument.</param>
+        /// <param name="arg7">Seventh argument.</param>
+        /// <param name="arg8">Eighth argument.</param>
+        void Invoke<T1, T2, T3, T4, T5, T6, T7, T8>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8);
+
+        /// <summary>
         /// Invokes function with no arguments and returns result of function invocation converted to type <typeparamref name="TResult"/>.
         /// </summary>
         /// <typeparam name="TResult">Type of result.</typeparam>

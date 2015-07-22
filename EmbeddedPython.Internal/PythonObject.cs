@@ -243,9 +243,72 @@ namespace EmbeddedPython.Internal
             }
         }
 
-        public IPythonFunction GetFunction(string functionName)
+        public IPythonFunction GetPythonFunction(string functionName)
         {
             return new PythonFunction(this, functionName);
+        }
+
+        public Action GetVoidFunction(string functionName)
+        {
+            var function = GetFunction(functionName, GetTypeHash(typeof(void)));
+
+            return function.Invoke;
+        }
+
+        public Action<T> GetVoidFunction<T>(string functionName)
+        {
+            var function = GetFunction(functionName, GetTypeHash(typeof(T), typeof(void)));
+
+            return function.Invoke<T>;
+        }
+
+        public Action<T1, T2> GetVoidFunction<T1, T2>(string functionName)
+        {
+            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(void)));
+
+            return function.Invoke<T1, T2>;
+        }
+
+        public Action<T1, T2, T3> GetVoidFunction<T1, T2, T3>(string functionName)
+        {
+            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(T3), typeof(void)));
+
+            return function.Invoke<T1, T2, T3>;
+        }
+
+        public Action<T1, T2, T3, T4> GetVoidFunction<T1, T2, T3, T4>(string functionName)
+        {
+            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(void)));
+
+            return function.Invoke<T1, T2, T3, T4>;
+        }
+
+        public Action<T1, T2, T3, T4, T5> GetVoidFunction<T1, T2, T3, T4, T5>(string functionName)
+        {
+            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(void)));
+
+            return function.Invoke<T1, T2, T3, T4, T5>;
+        }
+
+        public Action<T1, T2, T3, T4, T5, T6> GetVoidFunction<T1, T2, T3, T4, T5, T6>(string functionName)
+        {
+            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(void)));
+
+            return function.Invoke<T1, T2, T3, T4, T5, T6>;
+        }
+
+        public Action<T1, T2, T3, T4, T5, T6, T7> GetVoidFunction<T1, T2, T3, T4, T5, T6, T7>(string functionName)
+        {
+            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(void)));
+
+            return function.Invoke<T1, T2, T3, T4, T5, T6, T7>;
+        }
+
+        public Action<T1, T2, T3, T4, T5, T6, T7, T8> GetVoidFunction<T1, T2, T3, T4, T5, T6, T7, T8>(string functionName)
+        {
+            var function = GetFunction(functionName, GetTypeHash(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(T8), typeof(void)));
+
+            return function.Invoke<T1, T2, T3, T4, T5, T6, T7, T8>;
         }
 
         public Func<TResult> GetFunction<TResult>(string functionName)

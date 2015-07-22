@@ -28,18 +28,109 @@ namespace EmbeddedPython.UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(PythonException))]
+        public void Invoke_IncorrectNumberOfArgsVoid_ThrowsException()
+        {
+            using (var testTarget = _module.GetPythonFunction("func1"))
+            {
+                testTarget.Invoke("a", "b");
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(PythonException))]
         public void Invoke_IncorrectNumberOfArgs_ThrowsException()
         {
-            using (var testTarget = _module.GetFunction("func1"))
+            using (var testTarget = _module.GetPythonFunction("func1"))
             {
                 testTarget.Invoke<string, string, string>("a", "b");
             }
         }
 
         [TestMethod]
+        public void Invoke_0ArgVoid_Succeeds()
+        {
+            using (var testTarget = _module.GetPythonFunction("func0"))
+            {
+                testTarget.Invoke();
+            }
+        }
+
+        [TestMethod]
+        public void Invoke_1ArgVoid_Succeeds()
+        {
+            using (var testTarget = _module.GetPythonFunction("func1"))
+            {
+                testTarget.Invoke("a");
+            }
+        }
+
+        [TestMethod]
+        public void Invoke_2ArgVoid_Succeeds()
+        {
+            using (var testTarget = _module.GetPythonFunction("func2"))
+            {
+                testTarget.Invoke("a", "b");
+            }
+        }
+
+        [TestMethod]
+        public void Invoke_3ArgVoid_Succeeds()
+        {
+            using (var testTarget = _module.GetPythonFunction("func3"))
+            {
+                testTarget.Invoke("a", "b", "c");
+            }
+        }
+
+        [TestMethod]
+        public void Invoke_4ArgVoid_Succeeds()
+        {
+            using (var testTarget = _module.GetPythonFunction("func4"))
+            {
+                testTarget.Invoke("a", "b", "c", "d");
+            }
+        }
+
+        [TestMethod]
+        public void Invoke_5ArgVoid_Succeeds()
+        {
+            using (var testTarget = _module.GetPythonFunction("func5"))
+            {
+                testTarget.Invoke("a", "b", "c", "d", "e");
+            }
+        }
+
+        [TestMethod]
+        public void Invoke_6ArgVoid_Succeeds()
+        {
+            using (var testTarget = _module.GetPythonFunction("func6"))
+            {
+                testTarget.Invoke("a", "b", "c", "d", "e", "f");
+            }
+        }
+
+        [TestMethod]
+        public void Invoke_7ArgVoid_Succeeds()
+        {
+            using (var testTarget = _module.GetPythonFunction("func7"))
+            {
+                testTarget.Invoke("a", "b", "c", "d", "e", "f", "g");
+            }
+        }
+
+        [TestMethod]
+        public void Invoke_8ArgVoid_Succeeds()
+        {
+            using (var testTarget = _module.GetPythonFunction("func8"))
+            {
+                testTarget.Invoke("a", "b", "c", "d", "e", "f", "g", "h");
+            }
+        }
+
+        [TestMethod]
         public void Invoke_0Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func0"))
+            using (var testTarget = _module.GetPythonFunction("func0"))
             {
                 var result = testTarget.Invoke<string>();
 
@@ -50,7 +141,7 @@ namespace EmbeddedPython.UnitTests
         [TestMethod]
         public void Invoke_1Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func1"))
+            using (var testTarget = _module.GetPythonFunction("func1"))
             {
                 var result = testTarget.Invoke<string, string>("a");
 
@@ -61,7 +152,7 @@ namespace EmbeddedPython.UnitTests
         [TestMethod]
         public void Invoke_2Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func2"))
+            using (var testTarget = _module.GetPythonFunction("func2"))
             {
                 var result = testTarget.Invoke<string, string, string>("a", "b");
 
@@ -72,7 +163,7 @@ namespace EmbeddedPython.UnitTests
         [TestMethod]
         public void Invoke_3Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func3"))
+            using (var testTarget = _module.GetPythonFunction("func3"))
             {
                 var result = testTarget.Invoke<string, string, string, string>("a", "b", "c");
 
@@ -83,7 +174,7 @@ namespace EmbeddedPython.UnitTests
         [TestMethod]
         public void Invoke_4Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func4"))
+            using (var testTarget = _module.GetPythonFunction("func4"))
             {
                 var result = testTarget.Invoke<string, string, string, string, string>("a", "b", "c", "d");
 
@@ -94,7 +185,7 @@ namespace EmbeddedPython.UnitTests
         [TestMethod]
         public void Invoke_5Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func5"))
+            using (var testTarget = _module.GetPythonFunction("func5"))
             {
                 var result = testTarget.Invoke<string, string, string, string, string, string>("a", "b", "c", "d", "e");
 
@@ -105,7 +196,7 @@ namespace EmbeddedPython.UnitTests
         [TestMethod]
         public void Invoke_6Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func6"))
+            using (var testTarget = _module.GetPythonFunction("func6"))
             {
                 var result = testTarget.Invoke<string, string, string, string, string, string, string>("a", "b", "c", "d", "e", "f");
 
@@ -116,7 +207,7 @@ namespace EmbeddedPython.UnitTests
         [TestMethod]
         public void Invoke_7Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func7"))
+            using (var testTarget = _module.GetPythonFunction("func7"))
             {
                 var result = testTarget.Invoke<string, string, string, string, string, string, string, string>("a", "b", "c", "d", "e", "f", "g");
 
@@ -127,7 +218,7 @@ namespace EmbeddedPython.UnitTests
         [TestMethod]
         public void Invoke_8Arg_ReturnsCorrectName()
         {
-            using (var testTarget = _module.GetFunction("func8"))
+            using (var testTarget = _module.GetPythonFunction("func8"))
             {
                 var result = testTarget.Invoke<string, string, string, string, string, string, string, string, string>("a", "b", "c", "d", "e", "f", "g", "h");
 
@@ -151,7 +242,7 @@ namespace EmbeddedPython.UnitTests
                 var v7 = ((char)random.Next(32, 127)).ToString();
                 var v8 = ((char)random.Next(32, 127)).ToString();
 
-                using (var testTarget = _module.GetFunction("func8"))
+                using (var testTarget = _module.GetPythonFunction("func8"))
                 {
                     var result =
                         testTarget.Invoke<string, string, string, string, string, string, string, string, string>(
@@ -174,7 +265,7 @@ namespace EmbeddedPython.UnitTests
         {
             var random = new Random(555);
 
-            using (var testTarget = _module.GetFunction("func8"))
+            using (var testTarget = _module.GetPythonFunction("func8"))
             {
                 for (var i = 0; i < 10000; i++)
                 {
