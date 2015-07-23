@@ -160,6 +160,25 @@ namespace EmbeddedPython.Internal
 
                     return pyTuple;
                 }
+
+                if (genericType == typeof(List<>) ||
+                    genericType == typeof(IList<>) ||
+                    genericType == typeof(IEnumerable<>) ||
+                    genericType == typeof(IReadOnlyList<>) ||
+                    genericType == typeof(IReadOnlyCollection<>))
+                {
+                    return ClrArrayToPythonList((IEnumerable)value);
+                }
+            }
+
+            if (t.IsArray && t.GetArrayRank() == 1)
+            {
+                return ClrArrayToPythonList((Array)value);
+            }
+
+            if (t == typeof(IEnumerable))
+            {
+                return ClrArrayToPythonList((IEnumerable)value);
             }
 
             throw new PythonException(string.Format("Unsupported CLR to Python conversion for source type {0}.", t));
@@ -605,6 +624,30 @@ namespace EmbeddedPython.Internal
             }
 
             return array;
+        }
+
+        /// <summary>
+        /// Converts Python list to CLR array.
+        /// </summary>
+        /// <param name="array">CLR array</param>
+        /// <returns>Python list.</returns>
+        private static IntPtr ClrArrayToPythonList(IEnumerable array)
+        {
+            var a = array.Cast<object>().ToArray();
+            var numberOfItems = a.Length;
+
+            var pyList = PythonInterop.PyList_New(numberOfItems);
+
+            for (var i = 0; i < numberOfItems; i++)
+            {
+                var result = PythonInterop.PyList_SetItem(pyList, i, ConvertToPythonType(a[i]));
+                if (result < 0)
+                {
+                    throw PythonInterop.PyErr_Fetch();
+                }
+            }
+
+            return pyList;
         }
 
         /// <summary>

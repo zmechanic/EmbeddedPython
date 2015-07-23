@@ -110,7 +110,6 @@ namespace EmbeddedPython
         /// <typeparam name="T2">Type of second invocation argument.</typeparam>
         /// <typeparam name="T3">Type of third invocation argument.</typeparam>
         /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
-        /// <typeparam name="TResult">Type of function invocation result.</typeparam>
         /// <param name="functionName">Name of the Python function to get CLR invoke function for.</param>
         /// <returns>.NET action.</returns>
         Action<T1, T2, T3, T4> GetVoidFunction<T1, T2, T3, T4>(string functionName);
@@ -282,6 +281,126 @@ namespace EmbeddedPython
         /// </summary>
         /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
         void CallMethod(string methodName);
+
+        /// <summary>
+        /// Invokes Python method without arguments.
+        /// </summary>
+        /// <typeparam name="T">Type of invocation argument.</typeparam>
+        /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
+        /// <param name="arg">The argument.</param>
+        void CallMethod<T>(string methodName, T arg);
+
+        /// <summary>
+        /// Invokes Python method with two arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        void CallMethod<T1, T2>(string methodName, T1 arg1, T2 arg2);
+
+        /// <summary>
+        /// Invokes Python method with three arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <typeparam name="T3">Type of third invocation argument.</typeparam>
+        /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        void CallMethod<T1, T2, T3>(string methodName, T1 arg1, T2 arg2, T3 arg3);
+
+        /// <summary>
+        /// Invokes Python method with four arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <typeparam name="T3">Type of third invocation argument.</typeparam>
+        /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
+        /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        void CallMethod<T1, T2, T3, T4>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+
+        /// <summary>
+        /// Invokes Python method with five arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <typeparam name="T3">Type of third invocation argument.</typeparam>
+        /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
+        /// <typeparam name="T5">Type of fifth invocation argument.</typeparam>
+        /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
+        void CallMethod<T1, T2, T3, T4, T5>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+
+        /// <summary>
+        /// Invokes Python method with six arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <typeparam name="T3">Type of third invocation argument.</typeparam>
+        /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
+        /// <typeparam name="T5">Type of fifth invocation argument.</typeparam>
+        /// <typeparam name="T6">Type of sixth invocation argument.</typeparam>
+        /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
+        /// <param name="arg6">Sixth argument.</param>
+        void CallMethod<T1, T2, T3, T4, T5, T6>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6);
+
+        /// <summary>
+        /// Invokes Python method with seven arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <typeparam name="T3">Type of third invocation argument.</typeparam>
+        /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
+        /// <typeparam name="T5">Type of fifth invocation argument.</typeparam>
+        /// <typeparam name="T6">Type of sixth invocation argument.</typeparam>
+        /// <typeparam name="T7">Type of seventh invocation argument.</typeparam>
+        /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
+        /// <param name="arg6">Sixth argument.</param>
+        /// <param name="arg7">Seventh argument.</param>
+        void CallMethod<T1, T2, T3, T4, T5, T6, T7>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7);
+
+        /// <summary>
+        /// Invokes Python method with eighth arguments.
+        /// </summary>
+        /// <typeparam name="T1">Type of first invocation argument.</typeparam>
+        /// <typeparam name="T2">Type of second invocation argument.</typeparam>
+        /// <typeparam name="T3">Type of third invocation argument.</typeparam>
+        /// <typeparam name="T4">Type of forth invocation argument.</typeparam>
+        /// <typeparam name="T5">Type of fifth invocation argument.</typeparam>
+        /// <typeparam name="T6">Type of sixth invocation argument.</typeparam>
+        /// <typeparam name="T7">Type of seventh invocation argument.</typeparam>
+        /// <typeparam name="T8">Type of eighth invocation argument.</typeparam>
+        /// <param name="methodName">Name of the Python method to get CLR invoke method for.</param>
+        /// <param name="arg1">First argument.</param>
+        /// <param name="arg2">Second argument.</param>
+        /// <param name="arg3">Third argument.</param>
+        /// <param name="arg4">Forth argument.</param>
+        /// <param name="arg5">Fifth argument.</param>
+        /// <param name="arg6">Sixth argument.</param>
+        /// <param name="arg7">Seventh argument.</param>
+        /// <param name="arg8">Eighth argument.</param>
+        void CallMethod<T1, T2, T3, T4, T5, T6, T7, T8>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8);
 
         /// <summary>
         /// Invokes Python method without arguments.

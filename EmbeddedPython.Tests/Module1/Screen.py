@@ -38,3 +38,6 @@ class Screen:
 
     def get_screen(self):
         return self.screen
+    
+    def create_surface(self, width, height):
+        return pygame.Surface((width, height))
