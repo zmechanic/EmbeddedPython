@@ -53,8 +53,8 @@ namespace EmbeddedPython.Internal
             NativePythonObject = dictionary;
         }
 
-        internal PythonDictionary(IntPtr nativePythonObject, bool incrementReference)
-            : base(nativePythonObject, incrementReference)
+        internal PythonDictionary(IntPtr nativePythonObject)
+            : base(nativePythonObject)
         {
         }
 
@@ -83,12 +83,14 @@ namespace EmbeddedPython.Internal
                 return size;
             }
         }
+
         public object this[string key]
         {
             get
             {
                 return Get<object>(key);
             }
+
             set
             {
                 Set(key, value);
@@ -127,7 +129,7 @@ namespace EmbeddedPython.Internal
 
         public T Get<T>(string key)
         {
-            T netVar = default(T);
+            var netVar = default(T);
 
             try
             {
@@ -177,7 +179,7 @@ namespace EmbeddedPython.Internal
 
         public bool HasKey(string key)
         {
-            bool hasKey = false;
+            var hasKey = false;
 
             PythonInterop.PyGILState_Invoke(() =>
             {

@@ -209,12 +209,32 @@ namespace EmbeddedPython.Internal
 
             if (t == typeof(IPythonObject))
             {
-                return new PythonObject(value, true);
+                return new PythonObject(value);
             }
 
             if (t == typeof(IPythonModule))
             {
-                return new PythonModule(value, true);
+                return new PythonModule(value);
+            }
+
+            if (t == typeof(IPythonFunction))
+            {
+                return new PythonModule(value);
+            }
+
+            if (t == typeof(IPythonDictionary))
+            {
+                return new PythonDictionary(value);
+            }
+
+            if (t == typeof(IPythonList))
+            {
+                return new PythonList(value);
+            }
+
+            if (t == typeof(IPythonTuple))
+            {
+                return new PythonTuple(value);
             }
 
             if (t == typeof(bool))
@@ -244,7 +264,7 @@ namespace EmbeddedPython.Internal
                 {
                     var pyPointer = PythonInterop.PyBytes_AsByteArray(value);
 
-                    for (int i = 0; i < length; i++)
+                    for (var i = 0; i < length; i++)
                     {
                         result[i] = *pyPointer;
                         pyPointer++;
@@ -328,21 +348,6 @@ namespace EmbeddedPython.Internal
             if (t == typeof(PythonUnicodeString))
             {
                 return PythonUnicodeString.FromString(PythonInterop.PyUnicode_ToString(value));
-            }
-
-            if (t == typeof(IPythonDictionary))
-            {
-                return new PythonDictionary(value, true);
-            }
-
-            if (t == typeof(IPythonList))
-            {
-                return new PythonList(value, true);
-            }
-
-            if (t == typeof(IPythonTuple))
-            {
-                return new PythonTuple(value, true);
             }
 
             if (t == typeof(Tuple))
@@ -658,7 +663,7 @@ namespace EmbeddedPython.Internal
         /// <returns>CLR exception.</returns>
         private static PythonException ConvertException(IntPtr value, Type t)
         {
-            var pyError = new PythonObject(value, false);
+            var pyError = new PythonObject(value);
 
             if (t.IsSubclassOf(typeof(PythonSyntaxError)))
             {

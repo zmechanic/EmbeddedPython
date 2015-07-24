@@ -120,14 +120,45 @@ namespace EmbeddedPython.UnitTests
         }
 
         [TestMethod]
-        public void PassThrough_Dictionary_ReturnsSameValue()
+        public void PassThrough_PythonDictionary_ReturnsSameValue()
         {
             var testTarget = Python.Factory.CreateDictionary();
             testTarget["testKey"] = "Test Value";
 
             var result = Python.MainModule.Execute<IPythonDictionary>("result = v", new Dictionary<string, object> { { "v", testTarget } }, "result");
 
+            Assert.IsInstanceOfType(result, typeof(IPythonDictionary));
             Assert.AreEqual("Test Value", result.Get<string>("testKey"));
+
+            result.Dispose();
+        }
+
+        public void PassThrough_PythonList_ReturnsSameValue()
+        {
+            var testTarget = Python.Factory.CreateList(2);
+            testTarget[0] = 0;
+            testTarget[1] = "Test Value";
+
+            var result = Python.MainModule.Execute<IPythonList>("result = v", new Dictionary<string, object> { { "v", testTarget } }, "result");
+
+            Assert.IsInstanceOfType(result, typeof(IPythonList));
+            Assert.AreEqual(0, result[0]);
+            Assert.AreEqual("Test Value", result[1]);
+
+            result.Dispose();
+        }
+
+        public void PassThrough_PythonTuple_ReturnsSameValue()
+        {
+            var testTarget = Python.Factory.CreateTuple(2);
+            testTarget[0] = 0;
+            testTarget[1] = "Test Value";
+
+            var result = Python.MainModule.Execute<IPythonTuple>("result = v", new Dictionary<string, object> { { "v", testTarget } }, "result");
+
+            Assert.IsInstanceOfType(result, typeof(IPythonTuple));
+            Assert.AreEqual(0, result[0]);
+            Assert.AreEqual("Test Value", result[1]);
 
             result.Dispose();
         }

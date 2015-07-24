@@ -27,8 +27,8 @@
             NativePythonObject = dictionary;
         }
 
-        internal PythonList(IntPtr nativePythonObject, bool incrementReference)
-            : base(nativePythonObject, incrementReference)
+        internal PythonList(IntPtr nativePythonObject)
+            : base(nativePythonObject)
         {
         }
 
@@ -227,7 +227,7 @@
                         throw PythonInterop.PyErr_Fetch();
                     }
 
-                    tuple = new PythonTuple(pyTuple, false);
+                    tuple = new PythonTuple(pyTuple);
                 });
             }
             catch (Exception ex)

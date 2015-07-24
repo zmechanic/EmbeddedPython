@@ -255,7 +255,7 @@ namespace EmbeddedPython.Internal
             {
                 var presult = InvokeInternal();
                 result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
+                if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
             });
 
             return result;
@@ -273,7 +273,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = InvokeInternal(pyarg1);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -297,7 +297,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = InvokeInternal(pyarg1, pyarg2);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -323,7 +323,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = InvokeInternal(pyarg1, pyarg2, pyarg3);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -351,7 +351,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -381,7 +381,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -413,7 +413,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -447,7 +447,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -483,7 +483,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7, pyarg8);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {

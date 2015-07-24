@@ -15,14 +15,11 @@ namespace EmbeddedPython.Internal
         {
         }
 
-        internal PythonObject(IntPtr nativePythonObject, bool incrementReference)
+        internal PythonObject(IntPtr nativePythonObject)
         {
             NativePythonObject = nativePythonObject;
 
-            if (incrementReference)
-            {
-                PythonInterop.PyGILState_Invoke(() => PythonInterop.Py_IncRef(NativePythonObject));
-            }
+            PythonInterop.Py_IncRef(nativePythonObject);
         }
 
         internal IntPtr NativePythonObject
@@ -376,11 +373,7 @@ namespace EmbeddedPython.Internal
 
         public void CallMethod(string methodName)
         {
-            PythonInterop.PyGILState_Invoke(() =>
-            {
-                var presult = CallMethodInternal(methodName);
-                PythonInterop.Py_DecRef(presult);
-            });
+            PythonInterop.PyGILState_Invoke(() => this.CallMethodInternal(methodName));
         }
 
         public void CallMethod<T>(string methodName, T arg)
@@ -391,8 +384,7 @@ namespace EmbeddedPython.Internal
 
                 try
                 {
-                    var presult = CallMethodInternal(methodName, pyarg1);
-                    PythonInterop.Py_DecRef(presult);
+                    CallMethodInternal(methodName, pyarg1);
                 }
                 finally
                 {
@@ -410,8 +402,7 @@ namespace EmbeddedPython.Internal
 
                 try
                 {
-                    var presult = CallMethodInternal(methodName, pyarg1, pyarg2);
-                    PythonInterop.Py_DecRef(presult);
+                    CallMethodInternal(methodName, pyarg1, pyarg2);
                 }
                 finally
                 {
@@ -431,8 +422,7 @@ namespace EmbeddedPython.Internal
 
                 try
                 {
-                    var presult = CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3);
-                    PythonInterop.Py_DecRef(presult);
+                    CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3);
                 }
                 finally
                 {
@@ -454,8 +444,7 @@ namespace EmbeddedPython.Internal
 
                 try
                 {
-                    var presult = CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4);
-                    PythonInterop.Py_DecRef(presult);
+                    CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4);
                 }
                 finally
                 {
@@ -479,8 +468,7 @@ namespace EmbeddedPython.Internal
 
                 try
                 {
-                    var presult = CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
-                    PythonInterop.Py_DecRef(presult);
+                    CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
                 }
                 finally
                 {
@@ -506,8 +494,7 @@ namespace EmbeddedPython.Internal
 
                 try
                 {
-                    var presult = CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
-                    PythonInterop.Py_DecRef(presult);
+                    CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
                 }
                 finally
                 {
@@ -535,8 +522,7 @@ namespace EmbeddedPython.Internal
 
                 try
                 {
-                    var presult = CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
-                    PythonInterop.Py_DecRef(presult);
+                    CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
                 }
                 finally
                 {
@@ -566,8 +552,7 @@ namespace EmbeddedPython.Internal
 
                 try
                 {
-                    var presult = CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7, pyarg8);
-                    PythonInterop.Py_DecRef(presult);
+                    CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7, pyarg8);
                 }
                 finally
                 {
@@ -585,13 +570,13 @@ namespace EmbeddedPython.Internal
 
         public TResult CallMethod<TResult>(string methodName)
         {
-            TResult result = default(TResult);
+            var result = default(TResult);
 
             PythonInterop.PyGILState_Invoke(() =>
             {
                 var presult = CallMethodInternal(methodName);
                 result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
+                if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
             });
 
             return result;
@@ -599,7 +584,7 @@ namespace EmbeddedPython.Internal
 
         public TResult CallMethod<T, TResult>(string methodName, T arg)
         {
-            TResult result = default(TResult);
+            var result = default(TResult);
 
             PythonInterop.PyGILState_Invoke(() =>
             {
@@ -609,7 +594,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = CallMethodInternal(methodName, pyarg1);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -622,7 +607,7 @@ namespace EmbeddedPython.Internal
 
         public TResult CallMethod<T1, T2, TResult>(string methodName, T1 arg1, T2 arg2)
         {
-            TResult result = default(TResult);
+            var result = default(TResult);
 
             PythonInterop.PyGILState_Invoke(() =>
             {
@@ -633,7 +618,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = CallMethodInternal(methodName, pyarg1, pyarg2);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -647,7 +632,7 @@ namespace EmbeddedPython.Internal
 
         public TResult CallMethod<T1, T2, T3, TResult>(string methodName, T1 arg1, T2 arg2, T3 arg3)
         {
-            TResult result = default(TResult);
+            var result = default(TResult);
 
             PythonInterop.PyGILState_Invoke(() =>
             {
@@ -659,7 +644,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -674,7 +659,7 @@ namespace EmbeddedPython.Internal
 
         public TResult CallMethod<T1, T2, T3, T4, TResult>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
-            TResult result = default(TResult);
+            var result = default(TResult);
 
             PythonInterop.PyGILState_Invoke(() =>
             {
@@ -687,7 +672,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -703,7 +688,7 @@ namespace EmbeddedPython.Internal
 
         public TResult CallMethod<T1, T2, T3, T4, T5, TResult>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
-            TResult result = default(TResult);
+            var result = default(TResult);
 
             PythonInterop.PyGILState_Invoke(() =>
             {
@@ -717,7 +702,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -734,7 +719,7 @@ namespace EmbeddedPython.Internal
 
         public TResult CallMethod<T1, T2, T3, T4, T5, T6, TResult>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {
-            TResult result = default(TResult);
+            var result = default(TResult);
 
             PythonInterop.PyGILState_Invoke(() =>
             {
@@ -749,7 +734,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -767,7 +752,7 @@ namespace EmbeddedPython.Internal
 
         public TResult CallMethod<T1, T2, T3, T4, T5, T6, T7, TResult>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
         {
-            TResult result = default(TResult);
+            var result = default(TResult);
 
             PythonInterop.PyGILState_Invoke(() =>
             {
@@ -783,7 +768,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {
@@ -802,7 +787,7 @@ namespace EmbeddedPython.Internal
 
         public TResult CallMethod<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(string methodName, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
         {
-            TResult result = default(TResult);
+            var result = default(TResult);
 
             PythonInterop.PyGILState_Invoke(() =>
             {
@@ -819,7 +804,7 @@ namespace EmbeddedPython.Internal
                 {
                     var presult = CallMethodInternal(methodName, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7, pyarg8);
                     result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                    PythonInterop.Py_DecRef(presult);
+                    if (!(result is IntPtr) && !(result is IPythonObject)) PythonInterop.Py_DecRef(presult);
                 }
                 finally
                 {

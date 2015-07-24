@@ -86,8 +86,8 @@ namespace EmbeddedPython.Internal
             _dictionary = new PythonDictionary(this);
         }
 
-        internal PythonModule(IntPtr nativePythonObject, bool incrementReference)
-            : base(nativePythonObject, incrementReference)
+        internal PythonModule(IntPtr nativePythonObject)
+            : base(nativePythonObject)
         {
         }
 
@@ -139,8 +139,6 @@ namespace EmbeddedPython.Internal
                             throw PythonInterop.PyErr_Fetch();
                         }
 
-                        PythonInterop.Py_DecRef(pyResult);
-
                         if (resultVariable != null)
                         {
                             result = userDictionary.Get<T>(resultVariable);
@@ -191,8 +189,6 @@ namespace EmbeddedPython.Internal
                             throw PythonInterop.PyErr_Fetch();
                         }
 
-                        PythonInterop.Py_DecRef(pyResult);
-
                         if (resultVariable != null)
                         {
                             result = userDictionary.Get<T>(resultVariable);
@@ -237,8 +233,6 @@ namespace EmbeddedPython.Internal
                         {
                             throw PythonInterop.PyErr_Fetch();
                         }
-
-                        PythonInterop.Py_DecRef(pyResult);
 
                         if (resultVariables != null)
                         {

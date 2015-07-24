@@ -27,8 +27,8 @@ namespace EmbeddedPython.Internal
             NativePythonObject = dictionary;
         }
 
-        internal PythonTuple(IntPtr nativePythonObject, bool incrementReference)
-            : base(nativePythonObject, incrementReference)
+        internal PythonTuple(IntPtr nativePythonObject)
+            : base(nativePythonObject)
         {
         }
 

@@ -26,7 +26,7 @@ namespace EmbeddedPython.Tests
 
             var funcGetDriver = pygameDisplay.GetFunction<string>("get_driver");
             var funcUpdate = pygameDisplay.GetVoidFunction("update");
-
+/*
             pygameScreen.CallMethod("fill", new[] { 255, 0, 0 });
             
             var pygameSurface = screen.CallMethod<int, int, IPythonObject>("create_surface", 100, 200);
@@ -35,7 +35,7 @@ namespace EmbeddedPython.Tests
             pygameScreen.CallMethod("blit", pygameSurface, new[] { 20, 20 });
             pygameScreen.CallMethod("blit", pygameSurface, new[] { 30, 30 });
 
-            funcUpdate();
+            funcUpdate();*/
 /*
             var sw = new Stopwatch();
             sw.Start();
