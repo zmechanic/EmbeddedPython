@@ -52,16 +52,23 @@ namespace EmbeddedPython.Internal
 
         public void Invoke()
         {
-            PythonInterop.PyGILState_Invoke(() => this.InvokeInternal());
+            PythonInterop.PyGILState_Invoke(() => InvokeInternal());
         }
 
         public void Invoke<T>(T arg)
         {
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg);
-                this.InvokeInternal(pyarg0);
-                PythonInterop.Py_DecRef(pyarg0);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg);
+
+                try
+                {
+                    InvokeInternal(pyarg1);
+                }
+                finally
+                {
+                    if (!(arg is IntPtr) && !(arg is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                }
             });
         }
 
@@ -69,11 +76,18 @@ namespace EmbeddedPython.Internal
         {
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                this.InvokeInternal(pyarg0, pyarg1);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+
+                try
+                {
+                    InvokeInternal(pyarg1, pyarg2);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                }
             });
         }
 
@@ -81,13 +95,20 @@ namespace EmbeddedPython.Internal
         {
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                this.InvokeInternal(pyarg0, pyarg1, pyarg2);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg3);
+
+                try
+                {
+                    InvokeInternal(pyarg1, pyarg2, pyarg3);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                    if (!(arg3 is IntPtr) && !(arg3 is IPythonObject)) PythonInterop.Py_DecRef(pyarg3);
+                }
             });
         }
 
@@ -95,15 +116,22 @@ namespace EmbeddedPython.Internal
         {
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-                this.InvokeInternal(pyarg0, pyarg1, pyarg2, pyarg3);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg4);
+
+                try
+                {
+                    InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                    if (!(arg3 is IntPtr) && !(arg3 is IPythonObject)) PythonInterop.Py_DecRef(pyarg3);
+                    if (!(arg4 is IntPtr) && !(arg4 is IPythonObject)) PythonInterop.Py_DecRef(pyarg4);
+                }
             });
         }
 
@@ -111,17 +139,24 @@ namespace EmbeddedPython.Internal
         {
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-                this.InvokeInternal(pyarg0, pyarg1, pyarg2, pyarg3, pyarg4);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
-                PythonInterop.Py_DecRef(pyarg4);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg5);
+
+                try
+                {
+                    InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                    if (!(arg3 is IntPtr) && !(arg3 is IPythonObject)) PythonInterop.Py_DecRef(pyarg3);
+                    if (!(arg4 is IntPtr) && !(arg4 is IPythonObject)) PythonInterop.Py_DecRef(pyarg4);
+                    if (!(arg5 is IntPtr) && !(arg5 is IPythonObject)) PythonInterop.Py_DecRef(pyarg5);
+                }
             });
         }
 
@@ -129,19 +164,26 @@ namespace EmbeddedPython.Internal
         {
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
-                this.InvokeInternal(pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
-                PythonInterop.Py_DecRef(pyarg4);
-                PythonInterop.Py_DecRef(pyarg5);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg5);
+                var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg6);
+
+                try
+                {
+                    InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                    if (!(arg3 is IntPtr) && !(arg3 is IPythonObject)) PythonInterop.Py_DecRef(pyarg3);
+                    if (!(arg4 is IntPtr) && !(arg4 is IPythonObject)) PythonInterop.Py_DecRef(pyarg4);
+                    if (!(arg5 is IntPtr) && !(arg5 is IPythonObject)) PythonInterop.Py_DecRef(pyarg5);
+                    if (!(arg6 is IntPtr) && !(arg6 is IPythonObject)) PythonInterop.Py_DecRef(pyarg6);
+                }
             });
         }
 
@@ -149,21 +191,28 @@ namespace EmbeddedPython.Internal
         {
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
-                var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg7);
-                this.InvokeInternal(pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
-                PythonInterop.Py_DecRef(pyarg4);
-                PythonInterop.Py_DecRef(pyarg5);
-                PythonInterop.Py_DecRef(pyarg6);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg5);
+                var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg6);
+                var pyarg7 = PythonTypeConverter.ConvertToPythonType(arg7);
+
+                try
+                {
+                    InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                    if (!(arg3 is IntPtr) && !(arg3 is IPythonObject)) PythonInterop.Py_DecRef(pyarg3);
+                    if (!(arg4 is IntPtr) && !(arg4 is IPythonObject)) PythonInterop.Py_DecRef(pyarg4);
+                    if (!(arg5 is IntPtr) && !(arg5 is IPythonObject)) PythonInterop.Py_DecRef(pyarg5);
+                    if (!(arg6 is IntPtr) && !(arg6 is IPythonObject)) PythonInterop.Py_DecRef(pyarg6);
+                    if (!(arg7 is IntPtr) && !(arg7 is IPythonObject)) PythonInterop.Py_DecRef(pyarg7);
+                }
             });
         }
 
@@ -171,23 +220,30 @@ namespace EmbeddedPython.Internal
         {
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
-                var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg7);
-                var pyarg7 = PythonTypeConverter.ConvertToPythonType(arg8);
-                this.InvokeInternal(pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
-                PythonInterop.Py_DecRef(pyarg4);
-                PythonInterop.Py_DecRef(pyarg5);
-                PythonInterop.Py_DecRef(pyarg6);
-                PythonInterop.Py_DecRef(pyarg7);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg5);
+                var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg6);
+                var pyarg7 = PythonTypeConverter.ConvertToPythonType(arg7);
+                var pyarg8 = PythonTypeConverter.ConvertToPythonType(arg8);
+
+                try
+                {
+                    InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7, pyarg8);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                    if (!(arg3 is IntPtr) && !(arg3 is IPythonObject)) PythonInterop.Py_DecRef(pyarg3);
+                    if (!(arg4 is IntPtr) && !(arg4 is IPythonObject)) PythonInterop.Py_DecRef(pyarg4);
+                    if (!(arg5 is IntPtr) && !(arg5 is IPythonObject)) PythonInterop.Py_DecRef(pyarg5);
+                    if (!(arg6 is IntPtr) && !(arg6 is IPythonObject)) PythonInterop.Py_DecRef(pyarg6);
+                    if (!(arg7 is IntPtr) && !(arg7 is IPythonObject)) PythonInterop.Py_DecRef(pyarg7);
+                    if (!(arg8 is IntPtr) && !(arg8 is IPythonObject)) PythonInterop.Py_DecRef(pyarg8);
+                }
             });
         }
 
@@ -211,12 +267,20 @@ namespace EmbeddedPython.Internal
 
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg);
-                var presult = this.InvokeInternal(pyarg0);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg);
+
+                try
+                {
+                    var presult = InvokeInternal(pyarg1);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    if (!(arg is IntPtr) && !(arg is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                }
             });
+
             return result;
         }
 
@@ -226,14 +290,22 @@ namespace EmbeddedPython.Internal
 
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var presult = this.InvokeInternal(pyarg0, pyarg1);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+
+                try
+                {
+                    var presult = InvokeInternal(pyarg1, pyarg2);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                }
             });
+
             return result;
         }
 
@@ -243,16 +315,24 @@ namespace EmbeddedPython.Internal
 
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var presult = this.InvokeInternal(pyarg0, pyarg1, pyarg2);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg3);
+
+                try
+                {
+                    var presult = InvokeInternal(pyarg1, pyarg2, pyarg3);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                    if (!(arg3 is IntPtr) && !(arg3 is IPythonObject)) PythonInterop.Py_DecRef(pyarg3);
+                }
             });
+
             return result;
         }
 
@@ -262,18 +342,26 @@ namespace EmbeddedPython.Internal
 
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-                var presult = this.InvokeInternal(pyarg0, pyarg1, pyarg2, pyarg3);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg4);
+
+                try
+                {
+                    var presult = InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                    if (!(arg3 is IntPtr) && !(arg3 is IPythonObject)) PythonInterop.Py_DecRef(pyarg3);
+                    if (!(arg4 is IntPtr) && !(arg4 is IPythonObject)) PythonInterop.Py_DecRef(pyarg4);
+                }
             });
+
             return result;
         }
 
@@ -283,20 +371,28 @@ namespace EmbeddedPython.Internal
 
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-                var presult = this.InvokeInternal(pyarg0, pyarg1, pyarg2, pyarg3, pyarg4);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
-                PythonInterop.Py_DecRef(pyarg4);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg5);
+
+                try
+                {
+                    var presult = InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                    if (!(arg3 is IntPtr) && !(arg3 is IPythonObject)) PythonInterop.Py_DecRef(pyarg3);
+                    if (!(arg4 is IntPtr) && !(arg4 is IPythonObject)) PythonInterop.Py_DecRef(pyarg4);
+                    if (!(arg5 is IntPtr) && !(arg5 is IPythonObject)) PythonInterop.Py_DecRef(pyarg5);
+                }
             });
+
             return result;
         }
 
@@ -306,22 +402,30 @@ namespace EmbeddedPython.Internal
 
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
-                var presult = this.InvokeInternal(pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
-                PythonInterop.Py_DecRef(pyarg4);
-                PythonInterop.Py_DecRef(pyarg5);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg5);
+                var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg6);
+                
+                try
+                {
+                    var presult = InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                    if (!(arg3 is IntPtr) && !(arg3 is IPythonObject)) PythonInterop.Py_DecRef(pyarg3);
+                    if (!(arg4 is IntPtr) && !(arg4 is IPythonObject)) PythonInterop.Py_DecRef(pyarg4);
+                    if (!(arg5 is IntPtr) && !(arg5 is IPythonObject)) PythonInterop.Py_DecRef(pyarg5);
+                    if (!(arg6 is IntPtr) && !(arg6 is IPythonObject)) PythonInterop.Py_DecRef(pyarg6);
+                }
             });
+
             return result;
         }
 
@@ -331,24 +435,32 @@ namespace EmbeddedPython.Internal
 
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
-                var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg7);
-                var presult = this.InvokeInternal(pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
-                PythonInterop.Py_DecRef(pyarg4);
-                PythonInterop.Py_DecRef(pyarg5);
-                PythonInterop.Py_DecRef(pyarg6);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg5);
+                var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg6);
+                var pyarg7 = PythonTypeConverter.ConvertToPythonType(arg7);
+
+                try
+                {
+                    var presult = InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                    if (!(arg3 is IntPtr) && !(arg3 is IPythonObject)) PythonInterop.Py_DecRef(pyarg3);
+                    if (!(arg4 is IntPtr) && !(arg4 is IPythonObject)) PythonInterop.Py_DecRef(pyarg4);
+                    if (!(arg5 is IntPtr) && !(arg5 is IPythonObject)) PythonInterop.Py_DecRef(pyarg5);
+                    if (!(arg6 is IntPtr) && !(arg6 is IPythonObject)) PythonInterop.Py_DecRef(pyarg6);
+                    if (!(arg7 is IntPtr) && !(arg7 is IPythonObject)) PythonInterop.Py_DecRef(pyarg7);
+                }
             });
+
             return result;
         }
 
@@ -358,26 +470,34 @@ namespace EmbeddedPython.Internal
 
             PythonInterop.PyGILState_Invoke(() =>
             {
-                var pyarg0 = PythonTypeConverter.ConvertToPythonType(arg1);
-                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg2);
-                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg3);
-                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg4);
-                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg5);
-                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg6);
-                var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg7);
-                var pyarg7 = PythonTypeConverter.ConvertToPythonType(arg8);
-                var presult = this.InvokeInternal(pyarg0, pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7);
-                result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
-                PythonInterop.Py_DecRef(presult);
-                PythonInterop.Py_DecRef(pyarg0);
-                PythonInterop.Py_DecRef(pyarg1);
-                PythonInterop.Py_DecRef(pyarg2);
-                PythonInterop.Py_DecRef(pyarg3);
-                PythonInterop.Py_DecRef(pyarg4);
-                PythonInterop.Py_DecRef(pyarg5);
-                PythonInterop.Py_DecRef(pyarg6);
-                PythonInterop.Py_DecRef(pyarg7);
+                var pyarg1 = PythonTypeConverter.ConvertToPythonType(arg1);
+                var pyarg2 = PythonTypeConverter.ConvertToPythonType(arg2);
+                var pyarg3 = PythonTypeConverter.ConvertToPythonType(arg3);
+                var pyarg4 = PythonTypeConverter.ConvertToPythonType(arg4);
+                var pyarg5 = PythonTypeConverter.ConvertToPythonType(arg5);
+                var pyarg6 = PythonTypeConverter.ConvertToPythonType(arg6);
+                var pyarg7 = PythonTypeConverter.ConvertToPythonType(arg7);
+                var pyarg8 = PythonTypeConverter.ConvertToPythonType(arg8);
+
+                try
+                {
+                    var presult = InvokeInternal(pyarg1, pyarg2, pyarg3, pyarg4, pyarg5, pyarg6, pyarg7, pyarg8);
+                    result = PythonTypeConverter.ConvertToClrType<TResult>(presult);
+                    PythonInterop.Py_DecRef(presult);
+                }
+                finally
+                {
+                    if (!(arg1 is IntPtr) && !(arg1 is IPythonObject)) PythonInterop.Py_DecRef(pyarg1);
+                    if (!(arg2 is IntPtr) && !(arg2 is IPythonObject)) PythonInterop.Py_DecRef(pyarg2);
+                    if (!(arg3 is IntPtr) && !(arg3 is IPythonObject)) PythonInterop.Py_DecRef(pyarg3);
+                    if (!(arg4 is IntPtr) && !(arg4 is IPythonObject)) PythonInterop.Py_DecRef(pyarg4);
+                    if (!(arg5 is IntPtr) && !(arg5 is IPythonObject)) PythonInterop.Py_DecRef(pyarg5);
+                    if (!(arg6 is IntPtr) && !(arg6 is IPythonObject)) PythonInterop.Py_DecRef(pyarg6);
+                    if (!(arg7 is IntPtr) && !(arg7 is IPythonObject)) PythonInterop.Py_DecRef(pyarg7);
+                    if (!(arg8 is IntPtr) && !(arg8 is IPythonObject)) PythonInterop.Py_DecRef(pyarg8);
+                }
             });
+
             return result;
         }
 

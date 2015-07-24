@@ -25,13 +25,15 @@ namespace EmbeddedPython.Tests
             var pygameScreen = screen.CallMethod<IPythonObject>("get_screen");
 
             var funcGetDriver = pygameDisplay.GetFunction<string>("get_driver");
-            var funcUpdate = pygameDisplay.GetFunction<int>("update");
+            var funcUpdate = pygameDisplay.GetVoidFunction("update");
 
-            pygameScreen.CallMethod<byte[], int>("fill", new byte[] { 255, 0, 0 });
+            pygameScreen.CallMethod("fill", new[] { 255, 0, 0 });
             
             var pygameSurface = screen.CallMethod<int, int, IPythonObject>("create_surface", 100, 200);
-            pygameSurface.CallMethod("fill", new byte[] { 0, 255, 0 });
+            pygameSurface.CallMethod("fill", new[] { 0, 255, 0 });
             pygameScreen.CallMethod("blit", pygameSurface, new[] { 10, 10 });
+            pygameScreen.CallMethod("blit", pygameSurface, new[] { 20, 20 });
+            pygameScreen.CallMethod("blit", pygameSurface, new[] { 30, 30 });
 
             funcUpdate();
 /*
